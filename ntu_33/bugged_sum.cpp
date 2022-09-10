@@ -2,7 +2,10 @@
 using namespace std;
 
 int main() {
-    int n, s, a, counter=0;
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int n, s, a;
+    bool visited = false;
     cin >> n >> s;
     if (s%2) {
         cout << "yes" << endl;
@@ -13,10 +16,11 @@ int main() {
     while (n--) {
         cin >> a;
         if (s!=a) continue;
-        counter++;
-        if (counter > 2) {
-            cout << "no" << endl;
+        cout << "owo" << visited <<  endl;
+        if (visited) {
+            cout << "no\n";
             return 0;
+        visited = true;
         }
     }
 
