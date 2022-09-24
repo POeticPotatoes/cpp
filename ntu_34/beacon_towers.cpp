@@ -16,6 +16,7 @@ int main() {
         cin >> i;
         if (i >= m) {
             ans += ans*c%1000000007ll;
+            ans %= 1000000007ll;
             c = 0;
             m = i;
         }

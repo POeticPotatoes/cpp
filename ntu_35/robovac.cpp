@@ -5,17 +5,14 @@ int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int t, n;
+    int t;
     cin >> t;
 
     while (t--) {
+        long long n;
         cin >> n;
+        n--;
 
-        if (n%2)
-            cout << 0 << endl;
-        else if (n%4)
-            cout << (n/4-1)*n + n/4 << endl;
-        else
-            cout << n/4 * n << endl;
+        cout << (1ll+n)*n/2ll << endl;
     }
 }
