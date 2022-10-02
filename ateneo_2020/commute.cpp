@@ -15,26 +15,26 @@ int main() {
         e[x] = y;
     }
 
-    deque<int> q;
-    q.push_back(1);
+    stack<int> q;
+    q.push(1);
 
     while (q.size()) {
-        int i = q.back();
+        int i = q.top();
         if (i == a) {
             cout << "YES" << endl;
             return 0;
         }
-        q.pop_back();
+        q.pop();
         v[i] = true;
 
         if (e[i]) {
-            q.push_back(e[i]);
+            q.push(e[i]);
             continue;
         }
         if (i>1 && (!v[i-1]))
-            q.push_back(i-1);
+            q.push(i-1);
         if (i<n && (!v[i+1]))
-            q.push_back(i+1);
+            q.push(i+1);
     }
     cout << "NO" << endl;
 }
