@@ -12,7 +12,7 @@ int main() {
     
     for (int i=0; i<s.size(); i++)
         if (s[i] == 'X') {
-            s = s.substr(i) + s.substr(0,i);
+            s = s.substr(i) + s.substr(0,i); 
             break;
         }
  

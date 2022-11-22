@@ -1,4 +1,4 @@
-#include "/Users/poeticpotato/Desktop/Work/cpp/bits.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 int main() {
