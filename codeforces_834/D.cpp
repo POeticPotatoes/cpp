@@ -1,27 +1,25 @@
-#include "/Users/poeticpotato/Desktop/Work/cpp/bits.h"
+#include <bits/stdc++.h>
 #define ll long long
 using namespace std;
 
 void solve() {
-    ll n,m,a,p,i,end=0,start;
+    ll n,m,fives=0,twos=0,x=1;
+
     cin>>n>>m;
-    if (m==1) {
-        cout <<n<<endl;
+    ll ans = n;
+
+    for (;!(n&1);n>>=1,twos++);
+    for (;!(n%5);n/=5,fives++);
+
+    x *= pow(5, min(max(0ll,twos-fives), static_cast<ll>(floor(log(m)/log(5)))));
+    x *= pow(2, min(max(0ll,fives-twos), static_cast<ll>(floor(log(m)/log(2)))));
+    if (x>m) {
+        cout <<ans*m << endl;
         return;
     }
-    string times = to_string(m),
-           val = to_string(n);
-
-    a = times.size();
-    p = pow(10,a-1);
-    for (i=a-1;i&&val[i]=='0';i--);
-    for (start=0;start<a&&times[start]=='1';start++)
-        end=(end*10+times[start]-48),p/=10;
-    if (val[i] == '5') {
-        if (start == a) {
-            cout << n*pow(10,a-1)<<endl;
-        }
-    }
+    for (;x<=m;x*=10);
+    x/=10;
+    cout << ans*(x*(m/x)) << endl;
 }
 
 int main() {

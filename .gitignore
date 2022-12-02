@@ -1,2 +1,6 @@
 submissions
 submissions/*
+
+*.out
+.DS_Store
+.out
