@@ -34,34 +34,35 @@ const double eps = 1e-9;
 int n, pp[N], a[N], b[N];
 const int L = 720;
 void work(int x, int y) {
-	if (x > y) swap(x, y);
-	if (y - x == 360) {
-		rep(i, 0, L) pp[i] = 1;
-	}
-	if (y - x > 360) swap(x, y);
-	pp[x] = 1;
-	while (x != y) {
-		x = (x + 1) % L;
-		pp[x] = 1;
-	}
+    if (x > y) swap(x, y);
+    // Can change to return true
+    if (y - x == 360) {
+        rep(i, 0, L) pp[i] = 1;
+    }
+    if (y - x > 360) swap(x, y);
+    pp[x] = 1;
+    while (x != y) {
+        x = (x + 1) % L;
+        pp[x] = 1;
+    }
 }
 int main() {
-	IO;
-	cin >> n;
-	repn(i, 1, n) {
-		cin >> a[i] >> b[i];
-		b[i] = (b[i] + 180) * 2;
-	}
-	rep(i, 1, n) work(b[i], b[i + 1]);
-	work(b[n], b[1]);
-	int flag = 0, pos;
-	rep(i, 0, L) if (!pp[i]) {
-		flag = 1;
-		pos = i;
-		break;
-	}
-	
-	if (flag) printf("no %.1lf", (double)pos / 2.0 - 180);
-	else printf("yes\n");
-	return 0;
+    IO;
+    cin >> n;
+    repn(i, 1, n) {
+        cin >> a[i] >> b[i];
+        b[i] = (b[i] + 180) * 2;
+    }
+    rep(i, 1, n) work(b[i], b[i + 1]);
+    work(b[n], b[1]);
+    int flag = 0, pos;
+    rep(i, 0, L) if (!pp[i]) {
+        flag = 1;
+        pos = i;
+        break;
+    }
+    
+    if (flag) printf("no %.1lf", (double)pos / 2.0 - 180);
+    else printf("yes\n");
+    return 0;
 }

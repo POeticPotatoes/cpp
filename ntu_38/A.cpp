@@ -15,6 +15,6 @@ int main() {
         }
         cin >> e;
         if (e<=m) cout << "DATA IS BIAS!" << endl;
-        else cout << ceil((e-m)/m*100) << "% INCREASE!" << endl;
+        else cout << ceil(100*(e-m)/m) << "% INCREASE!" << endl;
     }
 }
