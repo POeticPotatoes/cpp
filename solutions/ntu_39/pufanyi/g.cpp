@@ -12,6 +12,7 @@ const int maxn = 5005;
 
 int n, w;
 std::string s[maxn];
+// length of words
 int aa[maxn];
 int f[maxn];
 int to[maxn];
