@@ -38,10 +38,15 @@ int f[N], dp[N], pre[N], len[N];
 int check(int x) {
     memset(f, 0, sizeof(f));
     memset(dp, 0, sizeof(dp));
+    // from first to last file (i)
     repn(i, 1, n) {
         int mn = inf;
+        // from first to i (j)
         rep(j, 0, i) {
+            // set f[0] to f[i] to i
             f[j] = max(f[j], len[i]);
+            
+            // if difference is less than x
             if (i - j <= x) {
                 int cost = f[j] + dp[j] + (j != 0);
                 if (cost < mn) {

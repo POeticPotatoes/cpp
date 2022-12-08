@@ -33,22 +33,22 @@ const double eps = 1e-9;
 
 int n, x, k;
 int main() {
-	IO;
-	cin >> n >> x >> k;
-	double ans = 0;
-	ans = pow(1.0 / n, k) * x;
-	repn(p, 2, n) {
-		double res = 1.0 / (double)(n);
-		res = res / (1 - (double)p / (p - 1));
-		// res = res * pow((double)(p - 1) / n, k - 1);
-		// res = res * (1 - pow(double(p) / (double)(p - 1), k));
-		double r1 = res * pow((double)(p - 1) / n, k - 1);
-		double r2 = res * pow((double)p / n, k - 1) * p / (p - 1);
-		res = r1 - r2;
-		if (p < x) res = res * x;
-		else res = res * (p + 1) / 2.0;
-		ans += res;
-	}
-	printf("%.10f\n", ans);
-	return 0;
+    IO;
+    cin >> n >> x >> k;
+    double ans = 0;
+    ans = pow(1.0 / n, k) * x;
+    repn(p, 2, n) {
+        double res = 1.0 / (double)(n);
+        res = res / (1 - (double)p / (p - 1));
+        // res = res * pow((double)(p - 1) / n, k - 1);
+        // res = res * (1 - pow(double(p) / (double)(p - 1), k));
+        double r1 = res * pow((double)(p - 1) / n, k - 1);
+        double r2 = res * pow((double)p / n, k - 1) * p / (p - 1);
+        res = r1 - r2;
+        if (p < x) res = res * x;
+        else res = res * (p + 1) / 2.0;
+        ans += res;
+    }
+    printf("%.10f\n", ans);
+    return 0;
 }

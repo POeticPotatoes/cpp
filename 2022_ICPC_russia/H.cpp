@@ -45,57 +45,56 @@ mt19937 rng((unsigned int) chrono::steady_clock::now().time_since_epoch().count(
 #define uid(a, b) uniform_int_distribution<int>19(a, b)(rng)
 
 int n,m;
-vll p, ans, pos, vis;
-vv<ll> adj;
+vll p, ans;
+vv<ll> A, B;
 
-int check(int x, int s) {
-    int cur=0;
-    ROF(i, n-1, vis[s]) {
-        cur+=pos[i] - (i==x);
-        if (!cur) return i;
+int check(int i, MaxHeap<pair<ll, ll>> q, vll weight) {
+    int cur=n-1;
+    // cout<<"checking "<<i<<", "<<cur<<endl;
+    while (q.size()) {
+        if (q.top().second == i) { q.pop(); continue; }
+        // cout<<q.top().first<<", "<<q.top().second<<", "<<cur<<endl;
+        if (q.top().first < cur) return cur;
+        // Use the top
+        auto j = q.top();q.pop();
+        // cout<<"used "<<j.second<<endl;
+        
+        for (auto k: A[j.second]) {
+            weight[k]--;
+            if (!weight[k] && k!=i) {
+                // cout<<"added "<<k<<endl;
+                q.push({p[k], k});
+            }
+        }
         cur--;
     }
-    return vis[s]+1;
-}
-
-void move(int a, int b) {
-    pos[p[a]]--;
-    p[a] = min(p[a], p[b]-1);
-    pos[p[a]]++;
-    
-    for (auto i: adj[a]) move(i, a);
-}
-
-int deps(int a) {
-    if (vis[a]!=-1) return vis[a];
-    int sum=0;
-    for (auto i:adj[a])
-        sum+=deps(i)+1;
-    vis[a] = sum;
-    return sum;
+    // cout<<cur<<": queue is empty!\n";
+    return cur;
 }
 
 void solve() {
     int a, b;
     cin>>n>>m;
     n++;
-    ans = pos = p = vll(n);
-    vis=vll(n, -1);
-    adj = vv<ll>(n);
-    FOR(i, 1, n) { 
-        cin>>p[i];
-        pos[p[i]]++;
-    }
+    vll weight = ans = p = vll(n);
+    A = B = vv<ll>(n);
+    MaxHeap<pair<ll, ll>> q;
+
+    FOR(i, 1, n) cin>>p[i];
 
     REP(i, m) {
         cin>>a>>b;
-        adj[b].eb(a);
-        move(a,b);
+        A[b].eb(a);
+        B[a].eb(b);
     }
 
     FOR(i, 1, n) {
-        deps(i);
-        ans[i] = check(p[i], i);
+        weight[i] = B[i].size();
+        if (!weight[i]) q.push({p[i], i});
+    }
+
+    FOR(i, 1, n) {
+        ans[i] = check(i, q, weight);
     }
     
     cout<<ans[1];
