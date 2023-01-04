@@ -1,9 +1,9 @@
-#include "/Users/poeticpotato/Desktop/Work/cpp/bits.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 #define IO cin.sync_with_stdio(false); cin.tie(0); cout.tie(0);
-#define FOR(i, a, b) for (ll (i) = (a); (i) < (b); (i)++)
-#define ROF(i, a, b) for (ll (i) = (a); (i) > (b); (i)--)
+#define FOR(i, a, b) for (ll i = (a); (i) < (b); (i)++)
+#define ROF(i, a, b) for (ll i = (a); (i) > (b); (i)--)
 #define REP(i, n) FOR(i, 0, n)
 #define all(x) (x).begin(), (x).end()
 #define eb emplace_back
@@ -49,23 +49,35 @@ void case3(vector<int> &a) {
     cout<<"3 1 2\n3 1 2\n";
 }
 
-int g(int a) { return (a-1)%n+1; }
+int g(int a) { return (a+n-1)%n+1; }
 
 void solve() {
     cin>> n;
-    vector<int> a(n+1), m(n+1);
+    vector<int> a(n+1), m(n+1), rot(n+1);
     um<int, int> mapping, dirty;
 
     FOR(i, 1, n+1) {
         cin>>a[i];
         dirty[a[i]] = i;
+        rot[g(i-a[i])]++;
     }
-    if (n==1) return (void) (cout<<"Impossible\n");
+    if (n==1) return (void) (cout<<"Impossible"<<endl);
     if (n==2) return (void) case2(a);
     if (n==3) return (void) case3(a);
 
-    iota(all(m), -1);
-    m[1] = n;
+    rot[0] = n;
+    int r=0;
+    FOR(i, 1, n) if (rot[i]<rot[r]) r=i;
+
+    iota(m.begin()+r+1, m.end(), 1);
+    iota(m.begin(), m.begin()+r+1, n-r);
+    // FOR(i, 1, n)
+    //     cout<<" "<<rot[i];
+    // cout<<endl;
+    // cout<<"rot: "<<r<<endl;
+    // FOR(i, 1, n+1)
+    //     cout<<", "<<m[i];
+    // cout<<endl;
 
     FOR(i, 1, n+1) {
         if (m[i] == a[i] || m[i] == i) {

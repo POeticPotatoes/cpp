@@ -25,34 +25,28 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-int cur, n, top[100000]{}, pre[100000]{};
-vector<int> adj[100000]{}, ans;
-MinHeap<tuple<int, int, int>> q;
+ll n, k, i, j, o, a;
 
 void solve() {
-    cin>>n;
-    REP(i,n) {
-        cin>>top[i]>>pre[i];
-        REP(j, pre[i]) {
-            cin>>cur;
-            adj[j].eb(i);
-        }
-        if (!pre[i]) q.push({top[i], i});
+    n--;
+    k = sqrt(n);
+    o = 2*(k)+1;
+    a = k*k;
+    if (k&1) {
+        if (n>a+o/2) return (void) (cout<<k+1<<" "<<a+o-n<<endl);
+        return (void) (cout<<n-a+1<<" "<<k+1<<endl);
     }
-
-    while (q.size()) {
-        auto i = q.top(); q.pop();
-        ans.eb(i.second);
-        for (auto j: adj[i.second]) {
-            pre[j]--;
-            if (!pre[j]) q.push({top[j], j});
-        }
-    }
+    if (n>a+o/2) return (void) (cout<<a+o-n<<" "<<k+1<<endl);
+    cout<<k+1<<" "<<n-a+1<<endl;
 }
 
 int main() {
     IO;
     int t=1;
     //cin >> t; // Comment this out if there are no tests
-    while (t--) solve();
+    while (true) {
+        cin>>n;
+        if (!n) break;
+        solve();
+    }
 }

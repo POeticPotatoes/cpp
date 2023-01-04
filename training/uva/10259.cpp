@@ -25,34 +25,21 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-int cur, n, top[100000]{}, pre[100000]{};
-vector<int> adj[100000]{}, ans;
-MinHeap<tuple<int, int, int>> q;
+ll n;
+const double m = sqrt(2)-1;
 
 void solve() {
     cin>>n;
-    REP(i,n) {
-        cin>>top[i]>>pre[i];
-        REP(j, pre[i]) {
-            cin>>cur;
-            adj[j].eb(i);
-        }
-        if (!pre[i]) q.push({top[i], i});
-    }
-
-    while (q.size()) {
-        auto i = q.top(); q.pop();
-        ans.eb(i.second);
-        for (auto j: adj[i.second]) {
-            pre[j]--;
-            if (!pre[j]) q.push({top[j], j});
-        }
-    }
+    if (n==1) return (void) (cout<<"0.000\n");
+    printf("%.3f\n", (n*n) + (n-2)*(n-2)*m);
 }
 
 int main() {
-    IO;
     int t=1;
-    //cin >> t; // Comment this out if there are no tests
-    while (t--) solve();
+    scanf("%d", &t);
+    while (t--) {
+        scanf("\n");
+        solve();
+        if(t) cout<<endl;
+    }
 }

@@ -21,38 +21,37 @@ using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 template <typename T>
 using MaxHeap = priority_queue<T>;
 
-constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-int cur, n, top[100000]{}, pre[100000]{};
-vector<int> adj[100000]{}, ans;
-MinHeap<tuple<int, int, int>> q;
+ll n, k, s, MOD, c;
+
+ll modPow(ll x, ll y) {
+    ll res=1;
+    while (y) {
+        if (y&1) res = (res*x)%MOD;
+        y >>= 1;
+        x = (x*x)%MOD;
+    }
+    return res%MOD;
+}
 
 void solve() {
-    cin>>n;
+    cin>>n>>k>>MOD;
+    s=0;
     REP(i,n) {
-        cin>>top[i]>>pre[i];
-        REP(j, pre[i]) {
-            cin>>cur;
-            adj[j].eb(i);
-        }
-        if (!pre[i]) q.push({top[i], i});
+        cin>>c;
+        s = (s+c)%MOD;
     }
-
-    while (q.size()) {
-        auto i = q.top(); q.pop();
-        ans.eb(i.second);
-        for (auto j: adj[i.second]) {
-            pre[j]--;
-            if (!pre[j]) q.push({top[j], j});
-        }
-    }
+    cout<<((s*k)%MOD*modPow(n,k-1))%MOD<<endl;
 }
 
 int main() {
     IO;
     int t=1;
-    //cin >> t; // Comment this out if there are no tests
-    while (t--) solve();
+    cin >> t; // Comment this out if there are no tests
+    REP (_,t) {
+        cout<<"Case "<<_+1<<": ";
+        solve();
+    }
 }

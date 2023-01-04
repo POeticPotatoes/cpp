@@ -25,34 +25,21 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-int cur, n, top[100000]{}, pre[100000]{};
-vector<int> adj[100000]{}, ans;
-MinHeap<tuple<int, int, int>> q;
+ll s, n;
 
-void solve() {
+void solve(int _) {
     cin>>n;
-    REP(i,n) {
-        cin>>top[i]>>pre[i];
-        REP(j, pre[i]) {
-            cin>>cur;
-            adj[j].eb(i);
-        }
-        if (!pre[i]) q.push({top[i], i});
-    }
-
-    while (q.size()) {
-        auto i = q.top(); q.pop();
-        ans.eb(i.second);
-        for (auto j: adj[i.second]) {
-            pre[j]--;
-            if (!pre[j]) q.push({top[j], j});
-        }
-    }
+    n--;
+    s = (1+n)*n/2;
+    cout<<"Case "<<_+1<<": ";
+    if (s&1) return (void) (cout<<s<<"/2\n");
+    cout<<s/2<<endl;
 }
 
 int main() {
-    IO;
     int t=1;
-    //cin >> t; // Comment this out if there are no tests
-    while (t--) solve();
+    cin >> t; // Comment this out if there are no tests
+    REP(_, t) {
+        solve(_);
+    }
 }
