@@ -1,9 +1,9 @@
-#include "/Users/poeticpotato/Desktop/Work/cpp/bits.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 #define IO cin.sync_with_stdio(false); cin.tie(0); cout.tie(0);
-#define FOR(i, a, b) for (ll (i) = (a); (i) < (b); (i)++)
-#define ROF(i, a, b) for (ll (i) = (a); (i) > (b); (i)--)
+#define FOR(i, a, b) for (ll i = (a); (i) < (b); (i)++)
+#define ROF(i, a, b) for (ll i = (a); (i) > (b); (i)--)
 #define REP(i, n) FOR(i, 0, n)
 #define all(x) (x).begin(), (x).end()
 #define eb emplace_back
@@ -25,43 +25,23 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll A[200000], n;
-
-int check(ll v) {
-    ll prev = abs(A[0]-v), cur;
-    FOR(i, 1, n) {
-        cur = abs(A[i]-v);
-        if(prev>cur)
-            return false;
-        prev = cur;
-    }
-    return true;
-}
+ll A[200000], n, l, r;
 
 void solve() {
     cin>>n;
     REP(i, n) cin>>A[i];
+    l=-inf, r=inf;
 
-    int result = check(A[0]);
-    if (result) {
-        cout<<A[0]<<endl;
-        return;
+    REP(i, n-1) {
+        if (A[i] == A[i+1]) continue;
+        if (A[i] < A[i+1]) {
+            r = min(r, (A[i]+A[i+1])/2);
+        } else {
+            l = max(l, (A[i]+A[i+1]+1)/2);
+        }
     }
-    ll l = 0, r=0;
-    FOR(i, 1, n) {
-        if (A[i]>A[0] && (!r || A[i]-A[0] < A[r]-A[0])) r=i;
-        if (A[i]<A[0] && (!l || A[0]-A[i] < A[0]-A[l])) l=i;
-    }
-    if (check((A[r]+A[0]+1)/2)) {
-        cout<<(A[r]+A[0]+1)/2<<endl;
-        return;
-    }
-    if (check((A[l]+A[0])/2)) {
-        cout<<(A[l]+A[0])/2<<endl;
-        return;
-    }
-    cout<<-1<<endl;
-    return;
+    if (r<l) return (void) (cout<<-1<<endl);
+    cout<<r<<endl;
 }
 
 int main() {
