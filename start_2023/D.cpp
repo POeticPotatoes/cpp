@@ -24,18 +24,19 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
+constexpr ll N = 3e5;
 
-ll n, A[1000], a, b;
+ll n, A[N], B[N];
 
 void solve() {
     cin>>n;
     REP(i, n) cin>>A[i];
-    b = 1023, a=0;
-    REP(i, n) {
-        a |= A[i];
-        b &= A[i];
-    }
-    cout<<a-b<<endl;
+    REP(i, n) cin>>B[i];
+
+    REP(i, n) if (A[i] < B[i])
+        return (void) (cout<<"NO"<<endl);
+
+
 }
 
 int main() {

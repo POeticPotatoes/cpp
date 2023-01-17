@@ -24,18 +24,31 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
+constexpr ll N = 2e5;
 
-ll n, A[1000], a, b;
+ll n, k, vis[N], r, minPow, minHealth;
+pair<ll, ll> H[N], P[N];
 
 void solve() {
-    cin>>n;
-    REP(i, n) cin>>A[i];
-    b = 1023, a=0;
-    REP(i, n) {
-        a |= A[i];
-        b &= A[i];
+    cin>>n>>k;
+    REP(i, n) cin>>H[i].first;
+    REP(i, n) cin>>P[i].first;
+    REP(i, n) H[i].second = P[i].second = i;
+    memset(vis, 0, sizeof(vis));
+
+    sort(H, H+n); sort(P, P+n);
+    r = minPow = minHealth = 0;
+    while (minHealth < n) {
+        if (H[minHealth].first-r <= 0) {
+            vis[H[minHealth].second] = 1;
+            minHealth++;
+            continue;
+        }
+        while (vis[P[minPow].second]) minPow++;
+        ll p = P[minPow].first, req = k/p;
+        if (k*(req+1) - ((p*req*req)/2) < H[minHealth].first-r)
+            return (void) (cout<<"NO"<<endl);
     }
-    cout<<a-b<<endl;
 }
 
 int main() {

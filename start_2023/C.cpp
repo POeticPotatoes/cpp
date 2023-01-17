@@ -24,18 +24,37 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
+constexpr ll N = 3e5;
 
-ll n, A[1000], a, b;
+ll n, m, A[N], ans, cur;
 
 void solve() {
-    cin>>n;
+    cin>>n>>m;
     REP(i, n) cin>>A[i];
-    b = 1023, a=0;
-    REP(i, n) {
-        a |= A[i];
-        b &= A[i];
+    MaxHeap<ll> front, back;
+    for (m--;m && !A[m];m--);
+    ans = m>0 && A[m]>0;
+    cur = -abs(A[m]);
+    ROF(i, m-1, -1) {
+        if (cur>0) {
+            ans++;
+            cur -= front.top()*2;
+            front.pop();
+        }
+        if (A[i]>0) front.push(A[i]);
+        cur += A[i];
     }
-    cout<<a-b<<endl;
+    cur = 0;
+    FOR(i, m+1, n) {
+        if (A[i]<0) back.push(abs(A[i]));
+        cur += A[i];
+        if (cur<0) {
+            ans++;
+            cur += back.top()*2;
+            back.pop();
+        }
+    }
+    cout<<ans<<endl;
 }
 
 int main() {

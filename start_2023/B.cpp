@@ -25,17 +25,23 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll n, A[1000], a, b;
+ll n, v;
 
 void solve() {
     cin>>n;
-    REP(i, n) cin>>A[i];
-    b = 1023, a=0;
-    REP(i, n) {
-        a |= A[i];
-        b &= A[i];
+    if (n==3) return (void) (cout<<"NO"<<endl);
+    cout<<"YES"<<endl;
+    if (n&1) {
+        v = n>>1;
+        REP(i, n) {
+            if (i&1) cout<<-v<<(i==n-1?"":" ");
+            else cout<<v-1<<(i==n-1?"":" ");
+        }
+        cout<<endl;
+        return;
     }
-    cout<<a-b<<endl;
+    REP(i, n) cout<<((i&1)?1:-1)<<(i==n-1?"":" ");
+    cout<<endl;
 }
 
 int main() {

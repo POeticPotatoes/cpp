@@ -24,22 +24,26 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
+constexpr ll N = 2e5;
 
-ll n, A[1000], a, b;
+ll n, ans;
+char A[N];
 
 void solve() {
     cin>>n;
-    REP(i, n) cin>>A[i];
-    b = 1023, a=0;
-    REP(i, n) {
-        a |= A[i];
-        b &= A[i];
+    scanf("%s", A);
+    ans=-1;
+
+    REP(i, n-1) {
+        if (A[i] == 'L') {
+            if (A[i+1] == 'R') ans=i+1;
+        }
+        else if (A[i+1] == 'L') return (void) (cout<<0<<endl);
     }
-    cout<<a-b<<endl;
+    cout<<ans<<endl;
 }
 
 int main() {
-    IO;
     int t=1;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();

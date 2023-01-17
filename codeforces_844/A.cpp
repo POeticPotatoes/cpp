@@ -25,17 +25,18 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll n, A[1000], a, b;
+ll w, d, h, a, b, f, g, p1, p2, p3, p4;
 
 void solve() {
-    cin>>n;
-    REP(i, n) cin>>A[i];
-    b = 1023, a=0;
-    REP(i, n) {
-        a |= A[i];
-        b &= A[i];
-    }
-    cout<<a-b<<endl;
+    cin>>w>>d>>h>>a>>b>>f>>g;
+
+    p1 = p2 = p3 = p4 = h;
+    p1 += abs(a-f) + b + g;
+    p2 += abs(a-f) + (d-b) + (d-g);
+    p3 += abs(b-g) + a + f;
+    p4 += abs(b-g) + (w-a) + (w-f);
+
+    cout<<min({p1, p2, p3, p4})<<endl;
 }
 
 int main() {
