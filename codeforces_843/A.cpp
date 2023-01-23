@@ -1,4 +1,4 @@
-#include "/Users/poeticpotato/Desktop/Work/cpp/bits.h"
+#include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 
 #ifdef DEBUG
@@ -30,35 +30,18 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
-constexpr ll N = 100;
-
-ll n, A[N], ans;
-map<ll, ll> X;
-
-void check(ll n1, ll n2) {
-    ll a=A[n1], b=A[n2], d=b-a, m=sqrt(d);
-    FORN(i, 1, m) {
-        if (d%i) continue;
-        ll p = i, q = d/i;
-        if ((p&1) == (q&1)) {
-            ll v = (p+q)/2, x=v*v-b;
-            if (x>=0) {
-                deb(a, b, x);
-                X[x] |= (1LL<<n1) | (1LL<<n2);
-            }
-        }
-    }
-}
 
 void solve() {
-    X.clear();
-    cin>>n;
-    sort(A, A+n);
-    REP(i, n) cin>>A[i];
-    REP(a, n) FOR(b, a+1, n) check(a, b);
-    ans=1;
-    for (auto p: X) ans=max(ans, (ll) __builtin_popcountll(p.second));
-    cout<<ans<<endl;
+    string s;
+    cin>> s;
+    int n=s.size(), pos=0;
+    FOR(i, 1, n-1) if (s[i]=='a') {
+        pos=i;
+        break;
+    }
+
+    if (pos) return (void) (cout<<s.substr(0, pos)<<" a "<<s.substr(pos+1)<<endl);
+    cout<<s[0]<<" "<<s.substr(1, n-2)<<" "<<s[n-1]<<endl;
 }
 
 int main() {
