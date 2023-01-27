@@ -1,7 +1,7 @@
-#include <bits/stdc++.h>
+#include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 #ifdef DEBUG
-    #include </home/poeticpotato/work/cpp/debug.h>
+    #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
 #else
   #define deb(x...)
 #endif
@@ -29,9 +29,34 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
+const ll N = 3e5;
+
+ll n, k, c;
+vector<ll> A[N];
+map<ll, ll> vis;
+bool flag;
 
 void solve() {
-
+    cin>>n;
+    vis.clear();
+    REP(i, n) {
+        A[i].clear();
+        cin>>k;
+        REP(j, k) {
+            cin>>c;
+            vis[c]++;
+            A[i].eb(c);
+        }
+    }
+    REP(i, n) {
+        flag = 1;
+        for (auto j: A[i]) if (vis[j]<2) {
+            flag = 0;
+            break;
+        }
+        if (flag) return (void) (cout<<"YES"<<endl);
+    }
+    cout<<"NO"<<endl;
 }
 
 int main() {

@@ -1,14 +1,15 @@
-#include <bits/stdc++.h>
+#include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
+
 #ifdef DEBUG
-    #include </home/poeticpotato/work/cpp/debug.h>
+    #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
 #else
   #define deb(x...)
 #endif
 #define IO cin.sync_with_stdio(false); cin.tie(0); cout.tie(0);
-#define FOR(i, a, b) for (ll i = (a); (i) < (b); (i)++)
-#define FORN(i, a, b) for (ll i = (a); (i) <= (b); (i)++);
-#define ROF(i, a, b) for (ll i = (a); (i) > (b); (i)--)
+#define FOR(i, a, b) for (ll (i) = (a); (i) < (b); (i)++)
+#define FORN(i, a, b) for (ll (i) = (a); (i) <= (b); (i)++)
+#define ROF(i, a, b) for (ll (i) = (a); (i) > (b); (i)--)
 #define REP(i, n) FOR(i, 0, n)
 #define all(x) (x).begin(), (x).end()
 #define eb emplace_back
@@ -29,34 +30,21 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
-constexpr ll N =3e5;
+const ll N  = 3e5;
 
-ll n, A[N], s, m;
-
-bool check(set<ll> &sums, ll v) {
-    ll a = v;
-    while (a<s) {
-        if (sums.count(a)) return true;
-        a+=v;
-    }
-    return false;
-}
+ll n, A[N], ans;
 
 void solve() {
     cin>>n;
     REP(i, n) cin>>A[i];
-    set<ll> sums;
-    s = 0;
-    REP(i, n) {
-        sums.insert(s);
-        s+=A[i];
+    ans = 0;
+    FOR(i, 1, n) A[i] += A[i-1];
+    deb(A[n-1]);
+    REP(i, n-1) {
+        ans = max(ans, gcd(A[i], A[n-1]));
+        deb(ans);
     }
-    deb(s);
-    for(int i=2;i<=s/2;i++) {
-        if (!(s%i) && check(sums, s/i))
-            return (void) (cout<<s/i<<endl);
-    }
-    cout<<1<<endl;
+    cout<<ans<<endl;
 }
 
 int main() {

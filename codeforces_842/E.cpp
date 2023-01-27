@@ -1,9 +1,15 @@
-#include <bits/stdc++.h>
+#include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 
+#ifdef DEBUG
+    #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
+#else
+  #define deb(x...)
+#endif
 #define IO cin.sync_with_stdio(false); cin.tie(0); cout.tie(0);
-#define FOR(i, a, b) for (ll i = (a); (i) <= (b); (i)++)
-#define ROF(i, a, b) for (ll i = (a); (i) > (b); (i)--)
+#define FOR(i, a, b) for (ll (i) = (a); (i) < (b); (i)++)
+#define FORN(i, a, b) for (ll (i) = (a); (i) <= (b); (i)++)
+#define ROF(i, a, b) for (ll (i) = (a); (i) > (b); (i)--)
 #define REP(i, n) FOR(i, 0, n)
 #define all(x) (x).begin(), (x).end()
 #define eb emplace_back
@@ -21,38 +27,65 @@ using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 template <typename T>
 using MaxHeap = priority_queue<T>;
 
-constexpr int MOD = 1e9+7;
-constexpr int inf = (int)1e9;
-constexpr ll INF = 1e18;
+const ll N = 3e6+10;
 
-ll n, m, one, two, thr, a, b, c;
+ll n, M, fac[N], inv[N];
+
+ll modPow(ll a, ll p) {
+    if (p==0) return 1;
+    ll ans = modPow(a, p/2);
+    ans = (ans*ans)%M;
+    if (p&1) ans = (ans*a)%M;
+    return ans;
+}
+
+ll choose(ll a, ll b) { return ((fac[a]*inv[b])%M * inv[a-b])%M; }
+
+void init() {
+    fac[0] = 1;
+    FOR(i, 1, N) fac[i] = (fac[i-1]*i)%M; 
+    inv[N-1] = modPow(fac[N-1], M-2);
+    ROF(i, N-1, 0) inv[i-1] = (inv[i]*i)%M;
+}
 
 void solve() {
-    cin>>n>>m;
-    one = 1;
-    FOR(i, 2, n) {
-        one = (one*i)%m;
-        cout<<i<<endl;
-    }
-    two = one;
-    FOR(i, n+1, n*2) {
-        two = (two*i)%m;
-        cout<<i<<endl;
-    }
-    thr = two;
-    FOR(i, n*2+1, n*3) {
-        thr = (thr*i)%m;
-        cout<<i<<endl;
-    }
-    a = one-1;
-    b = ((two-one+m)%m*2)%m;
-    c = (thr - b - a + m)%m;
+    cin>>n>>M;
+    init();
+    deb(choose(4,2));
 
-    cout << (a+b+2*c)%m <<endl;
+    ll ans[4], x;
+    ans[0] = 1;
+    ans[1] = (2*fac[2*n]) %M;
+    ans[1] = (ans[1]-fac[n]+M) %M;
+    ans[1] = (ans[1]-ans[0]+M) %M;
+
+    ans[2] = (2*choose(2*n, n)) %M;
+    ans[2] = (ans[2]*fac[n]) %M;
+    ans[2] = (ans[2]*fac[2*n]) %M;
+
+    ll c, s;
+    s = 0;
+    FORN(i, 0, n) {
+        c = (choose(n, n-i) * choose(n, i)) %M;
+        c = (c*choose(2*n-i, n)) %M;
+        c = (c*fac[n]) %M;
+        c = (c*fac[n]) %M;
+        c = (c*fac[n]) %M;
+        s = (s+c) %M;
+    }
+    ans[2] = (ans[2]-s+M) %M;
+    ans[2] = (ans[2]-ans[1]+M) %M;
+    ans[2] = (ans[2]-ans[0]+M) %M;
+
+    ans[3] = fac[3*n];
+    ans[3] = (ans[3]-ans[2]+M) %M;
+    ans[3] = (ans[3]-ans[1]+M) %M;
+    ans[3] = (ans[3]-ans[0]+M) %M;
+    x = (ans[1] + 2*ans[2] + 3*ans[3]) %M;
+    cout<<x<<endl;
 }
 
 int main() {
-    IO;
     int t=1;
     //cin >> t; // Comment this out if there are no tests
     while (t--) solve();

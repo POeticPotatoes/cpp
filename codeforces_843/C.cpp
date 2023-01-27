@@ -1,14 +1,15 @@
-#include <bits/stdc++.h>
+#include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
+
 #ifdef DEBUG
-    #include </home/poeticpotato/work/cpp/debug.h>
+    #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
 #else
   #define deb(x...)
 #endif
 #define IO cin.sync_with_stdio(false); cin.tie(0); cout.tie(0);
-#define FOR(i, a, b) for (ll i = (a); (i) < (b); (i)++)
-#define FORN(i, a, b) for (ll i = (a); (i) <= (b); (i)++);
-#define ROF(i, a, b) for (ll i = (a); (i) > (b); (i)--)
+#define FOR(i, a, b) for (ll (i) = (a); (i) < (b); (i)++)
+#define FORN(i, a, b) for (ll (i) = (a); (i) <= (b); (i)++)
+#define ROF(i, a, b) for (ll (i) = (a); (i) > (b); (i)--)
 #define REP(i, n) FOR(i, 0, n)
 #define all(x) (x).begin(), (x).end()
 #define eb emplace_back
@@ -30,19 +31,15 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r, n;
+ll n, x, p, a, c;
 
 void solve() {
-    cin>>l>>r;
-    n = r-l+1;
-    // trivial cases: 
-    // 1-((n+1)/2) are all valid
-    // IFF (n>=l) then only 0-r/2 MUST be valid
-    //
-    // therefore 3<=n<l<=1e9 in the non trivial case
-    // upper bound: n, lower bound: (n+1)/2
-    // we have (n-1)/2 nontrivial values to check (still too large)
-    // 
+    cin>>n>>x;
+    ROF(i, 63, -1) {
+        c = 1<<i;
+        if (x&1 && !(n&1))
+            return (void) (cout<<-1<<endl);
+    }
 }
 
 int main() {
