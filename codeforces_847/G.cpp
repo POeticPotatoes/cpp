@@ -29,34 +29,29 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
+const ll N = 3e5;
 
-ll n, x, a, c, orig, m, fin;
+ll n, m, p, b, P[N], B[N], vis[N], c, a, b;
+vv<ll> adj;
 
 void solve() {
-    cin>>n>>x;
-    orig = n, fin = x;
-    for (ll p=1LL<<62;p>0;p>>=1) {
-        if (x&p && !(n&p))
-            return (void) (cout<<-1<<endl);
-        if (n&p) {
-            if (x&p) {
-                n -= p;
-                x -= p;
-                deb(n, x);
-                continue;
-            }
-            a = p;
-            break;
-        }
+    cin>>n>>m>>p>>b;
+    memset(P, 0, sizeof(ll)*n);
+    memset(B, 0, sizeof(ll)*n);
+    adj = vv<ll>(n);
+    REP(i, p) {
+        cin>>c;
+        P[--c] = 1;
     }
-    if (!n && !x) return (void) (cout<<orig<<endl);
-    deb(a);
-    for (ll p=a>>1;p>0;p>>=1)
-        if (x&p) return (void) (cout<<-1<<endl);
-    a<<=1;
-    m = orig + a-n;
-    if ((m&orig) != fin) return (void) (cout<<-1<<endl);
-    cout<<m<<endl;
+    REP(i, n) {
+        cin>>c;
+        B[--c] = 1;
+    }
+    REP(i, m) {
+        cin>>a>>b;
+        adj[--a].eb(--b);
+        adj[b].eb(a);
+    }
 }
 
 int main() {

@@ -30,33 +30,33 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll n, x, a, c, orig, m, fin;
+ll n, ans, c, m, a, s;
 
 void solve() {
-    cin>>n>>x;
-    orig = n, fin = x;
-    for (ll p=1LL<<62;p>0;p>>=1) {
-        if (x&p && !(n&p))
-            return (void) (cout<<-1<<endl);
-        if (n&p) {
-            if (x&p) {
-                n -= p;
-                x -= p;
-                deb(n, x);
-                continue;
-            }
-            a = p;
-            break;
+    cin>>n;
+    map<ll, ll> F;
+    m = sqrt(n);
+    FORN(i, 2, m) {
+        while (!(n%i)) {
+            n/=i;
+            F[i]++;
         }
     }
-    if (!n && !x) return (void) (cout<<orig<<endl);
-    deb(a);
-    for (ll p=a>>1;p>0;p>>=1)
-        if (x&p) return (void) (cout<<-1<<endl);
-    a<<=1;
-    m = orig + a-n;
-    if ((m&orig) != fin) return (void) (cout<<-1<<endl);
-    cout<<m<<endl;
+    if (n>1) F[n]++;
+    
+    ans = a = s = 0;
+    while (1) {
+        s = inf, c=1;
+        for (auto p: F) {
+            if (p.second - a <= 0) continue;
+            s = min(p.second - a, s);
+            c *= p.first;
+        }
+        if (c == 1) break;
+        a += s;
+        ans += c*s;
+    }
+    cout<<ans<<endl;
 }
 
 int main() {

@@ -30,33 +30,54 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll n, x, a, c, orig, m, fin;
+ll n, m, m1, m2, ans, c;
 
 void solve() {
-    cin>>n>>x;
-    orig = n, fin = x;
-    for (ll p=1LL<<62;p>0;p>>=1) {
-        if (x&p && !(n&p))
-            return (void) (cout<<-1<<endl);
-        if (n&p) {
-            if (x&p) {
-                n -= p;
-                x -= p;
-                deb(n, x);
-                continue;
-            }
-            a = p;
-            break;
+    cin>>n>>m1>>m2;
+    vll A{1};
+    vector<pair<ll, ll>> V;
+    map<ll, ll> d;
+    for (int i=2;i*i<=m1;i++)
+        while (!(m1%i))
+            m1/=i, d[i]++;
+    if (m1>1)  d[m1]++;
+    for (int i=2;i*i<=m2;i++)
+        while (!(m2%i))
+            m2/=i, d[i]++;
+    if (m2>1)  d[m2]++;
+
+    for (auto &p: d) V.eb(p);
+    ll v = V.size(), s, x;
+    REP(i, v) {
+        s = A.size();
+        REP(j, s) {
+            x = A[j];
+            REP(k, V[i].second)
+                A.eb(x *= V[i].first);
         }
     }
-    if (!n && !x) return (void) (cout<<orig<<endl);
-    deb(a);
-    for (ll p=a>>1;p>0;p>>=1)
-        if (x&p) return (void) (cout<<-1<<endl);
-    a<<=1;
-    m = orig + a-n;
-    if ((m&orig) != fin) return (void) (cout<<-1<<endl);
-    cout<<m<<endl;
+    sort(all(A));
+    deb(A);
+    ans=0, c=0;
+    for (auto i: A) {
+        deb(i);
+        if (i<=n) {
+            ans++;
+            c ^= 1;
+            deb(i, c);
+            continue;
+        }
+        auto p = lower_bound(all(A), (i+n-1)/n);
+        for (;(p!=A.end()) && (*p<=n);p++) {
+            if (!(i%*p)) {
+                ans++;
+                c ^= *p;
+                deb(*p, c);
+                break;
+            }
+        }
+    }
+    cout<<ans<<" "<<c<<endl;
 }
 
 int main() {

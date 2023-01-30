@@ -29,34 +29,13 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
-
-ll n, x, a, c, orig, m, fin;
+string pi = "31415926535897932384626433832795028841971", s;
 
 void solve() {
-    cin>>n>>x;
-    orig = n, fin = x;
-    for (ll p=1LL<<62;p>0;p>>=1) {
-        if (x&p && !(n&p))
-            return (void) (cout<<-1<<endl);
-        if (n&p) {
-            if (x&p) {
-                n -= p;
-                x -= p;
-                deb(n, x);
-                continue;
-            }
-            a = p;
-            break;
-        }
-    }
-    if (!n && !x) return (void) (cout<<orig<<endl);
-    deb(a);
-    for (ll p=a>>1;p>0;p>>=1)
-        if (x&p) return (void) (cout<<-1<<endl);
-    a<<=1;
-    m = orig + a-n;
-    if ((m&orig) != fin) return (void) (cout<<-1<<endl);
-    cout<<m<<endl;
+    cin>>s;
+    int ans=0;
+    while (s[ans] == pi[ans]) ans++;
+    cout<<ans<<endl;
 }
 
 int main() {

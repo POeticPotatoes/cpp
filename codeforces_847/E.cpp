@@ -30,33 +30,22 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll n, x, a, c, orig, m, fin;
+ll x, a, b, s;
 
 void solve() {
-    cin>>n>>x;
-    orig = n, fin = x;
-    for (ll p=1LL<<62;p>0;p>>=1) {
-        if (x&p && !(n&p))
-            return (void) (cout<<-1<<endl);
-        if (n&p) {
-            if (x&p) {
-                n -= p;
-                x -= p;
-                deb(n, x);
-                continue;
-            }
-            a = p;
-            break;
-        }
+    cin>>x;
+    a = s = x, b=0;
+    MaxHeap<ll> q;
+    REP(i, 40) if (!(a&(1LL<<i))) q.push(1LL<<i);
+    while (s) {
+        while (q.size() && q.top()>s/2) q.pop();
+        if (q.empty()) return (void) (cout<<-1<<endl);
+        s -= 2*q.top();
+        a |= q.top();
+        b |= q.top();
+        q.pop();
     }
-    if (!n && !x) return (void) (cout<<orig<<endl);
-    deb(a);
-    for (ll p=a>>1;p>0;p>>=1)
-        if (x&p) return (void) (cout<<-1<<endl);
-    a<<=1;
-    m = orig + a-n;
-    if ((m&orig) != fin) return (void) (cout<<-1<<endl);
-    cout<<m<<endl;
+    cout<<a<<" "<<b<<endl;
 }
 
 int main() {

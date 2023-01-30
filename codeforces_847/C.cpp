@@ -29,34 +29,34 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
+constexpr ll N = 200;
 
-ll n, x, a, c, orig, m, fin;
+ll n, vis[N], P[N], c;
+vll A[N];
 
 void solve() {
-    cin>>n>>x;
-    orig = n, fin = x;
-    for (ll p=1LL<<62;p>0;p>>=1) {
-        if (x&p && !(n&p))
-            return (void) (cout<<-1<<endl);
-        if (n&p) {
-            if (x&p) {
-                n -= p;
-                x -= p;
-                deb(n, x);
-                continue;
-            }
-            a = p;
-            break;
-        }
+    cin>>n;
+    REP(i, n) {
+        A[i] = vll(n);
+        REP(j, n-1) cin>>A[i][j];
     }
-    if (!n && !x) return (void) (cout<<orig<<endl);
-    deb(a);
-    for (ll p=a>>1;p>0;p>>=1)
-        if (x&p) return (void) (cout<<-1<<endl);
-    a<<=1;
-    m = orig + a-n;
-    if ((m&orig) != fin) return (void) (cout<<-1<<endl);
-    cout<<m<<endl;
+    deb(n);
+    memset(P, 0, sizeof(ll)*n);
+    vll ans;
+    REP(i, n) {
+        memset(vis, 0, sizeof(ll)*(n+1));
+        REP(j, n) {
+            deb(i, j, A[j][P[j]], P[j]);
+            if (vis[A[j][P[j]]]++) {
+                c = A[j][P[j]];
+                break;
+            }
+        }
+        REP(j, n) P[j] += A[j][P[j]] ==c;
+        ans.eb(c);
+    }
+    REP(i, n) cout<<ans[i]<<" ";
+    cout<<endl;
 }
 
 int main() {
