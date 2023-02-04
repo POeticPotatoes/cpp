@@ -31,22 +31,24 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r, n, c, ans, x;
+ll n, a, b, v;
+string s;
+char P[26][26];
 
 void solve() {
-    cin>>l>>r;
-    if ((l-1)*3 <= r) return (cout<<r/2<<endl);
-    n = r-l+1;
-    ans = max(n, r/2);
-    vll X, K;
+    cin>>n>>s;
+    memset(P, 0, sizeof(P));
 
-    c = (n+1)/2;
-    while (c < n && c < l) {
-        X.eb(x=(l+c-1)/c);
-        K.eb(c);
-        c = ((r+x-2)/(x-1));
+    FOR(i, 1, n) {
+        b = s[i-1]-97, a=s[i]-97;
+        if (!P[b][a]) {
+            P[b][a] = i;
+            continue;
+        }
+        if (P[b][a] < i-1)
+            return (void) (cout<<"YES"<<endl);
     }
-    
+    cout<<"NO"<<endl;
 }
 
 int main() {

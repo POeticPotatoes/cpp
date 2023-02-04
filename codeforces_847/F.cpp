@@ -1,6 +1,5 @@
 #include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
-
 #ifdef DEBUG
     #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
 #else
@@ -30,23 +29,50 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
+constexpr ll N = 3e5;
 
-ll l, r, n, c, ans, x;
+ll n, A[N], a, b, D[N], P[N];
+vv<ll> adj;
+
+void dfs(ll k) {
+    for (auto i: adj[k]) {
+        if (i == P[k]) continue;
+        P[i] = k;
+        dfs(i);
+    }
+}
 
 void solve() {
-    cin>>l>>r;
-    if ((l-1)*3 <= r) return (cout<<r/2<<endl);
-    n = r-l+1;
-    ans = max(n, r/2);
-    vll X, K;
-
-    c = (n+1)/2;
-    while (c < n && c < l) {
-        X.eb(x=(l+c-1)/c);
-        K.eb(c);
-        c = ((r+x-2)/(x-1));
+    cin>>n;
+    adj = vv<ll>(n);
+    REP(i, n) cin>>A[i];
+    REP(i, n-1) {
+        cin>>a>>b;
+        adj[--a].eb(--b);
+        adj[b].eb(a);
     }
-    
+    memset(P, 0x3f, sizeof(ll)*n);
+    memset(D, 0x3f, sizeof(ll)*n);
+    // As a tree, all nodes can be valid roots
+    P[0] = -1;
+    dfs(0);
+
+    ll ans=inf;
+    vll v;
+    REP(i, n) {
+        ll d=0, cur=--A[i];
+        while (cur>-1 && d<ans) {
+            deb(cur, ans, d, D[cur], d+D[cur]);
+            ans = min(ans, d+D[cur]);
+            D[cur] = min(D[cur], d);
+            cur = P[cur];
+            d++;
+        }
+        deb(ans);
+        v.eb(ans);
+    }
+    FOR(i, 1, n) cout<<v[i]<<" ";
+    cout<<endl;
 }
 
 int main() {

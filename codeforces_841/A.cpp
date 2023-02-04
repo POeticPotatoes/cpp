@@ -30,23 +30,22 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
+const ll N = 100;
 
-ll l, r, n, c, ans, x;
+ll n, A[N], m, p;
 
 void solve() {
-    cin>>l>>r;
-    if ((l-1)*3 <= r) return (cout<<r/2<<endl);
-    n = r-l+1;
-    ans = max(n, r/2);
-    vll X, K;
-
-    c = (n+1)/2;
-    while (c < n && c < l) {
-        X.eb(x=(l+c-1)/c);
-        K.eb(c);
-        c = ((r+x-2)/(x-1));
+    cin>>n;
+    p = m = 0;
+    REP(i, n) cin>>A[i];
+    REP(i, n) if (A[i]>m) m=A[i], p = i;
+    deb(p, m);
+    FOR(i, 0, n) {
+        if (i==p) continue;
+        A[p] *= A[i];
     }
-    
+    A[p] += n-1;
+    cout<<A[p] * 2022<<endl;
 }
 
 int main() {

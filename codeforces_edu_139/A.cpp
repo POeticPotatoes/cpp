@@ -31,22 +31,13 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r, n, c, ans, x;
+ll n, a, ans;
 
 void solve() {
-    cin>>l>>r;
-    if ((l-1)*3 <= r) return (cout<<r/2<<endl);
-    n = r-l+1;
-    ans = max(n, r/2);
-    vll X, K;
-
-    c = (n+1)/2;
-    while (c < n && c < l) {
-        X.eb(x=(l+c-1)/c);
-        K.eb(c);
-        c = ((r+x-2)/(x-1));
-    }
-    
+    cin>>n;
+    a = log10(n);
+    ans = 9*a + (n/pow(10, a));
+    cout<<ans<<endl;
 }
 
 int main() {
