@@ -1,6 +1,11 @@
-#include <bits/stdc++.h>
+#include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 
+#ifdef DEBUG
+    #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
+#else
+  #define deb(x...)
+#endif
 #define IO cin.sync_with_stdio(false); cin.tie(0); cout.tie(0);
 #define FOR(i, a, b) for (ll i = (a); (i) < (b); (i)++)
 #define ROF(i, a, b) for (ll i = (a); (i) > (b); (i)--)
@@ -24,10 +29,11 @@ using MaxHeap = priority_queue<T>;
 constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
+const ll N = 4e5 + 10;
 
-int cur, n, top[100000]{}, pre[100000]{};
-vector<int> adj[100000]{}, ans;
-MinHeap<tuple<int, int, int>> q;
+ll cur, n, top[N]{}, pre[N]{}, req[N]{};
+vector<int> adj[N]{}, ans;
+MinHeap<pair<int, int>> q;
 
 void solve() {
     cin>>n;
@@ -35,19 +41,32 @@ void solve() {
         cin>>top[i]>>pre[i];
         REP(j, pre[i]) {
             cin>>cur;
-            adj[j].eb(i);
+            adj[i].eb(--cur);
+            req[cur]++;
         }
-        if (!pre[i]) q.push({top[i], i});
     }
+    REP(i, n) {
+        deb(i, req[i]);
+    }
+    REP(i, n) if (!req[i]) q.emplace(top[i], i);
 
     while (q.size()) {
         auto i = q.top(); q.pop();
+        deb(i);
         ans.eb(i.second);
         for (auto j: adj[i.second]) {
-            pre[j]--;
-            if (!pre[j]) q.push({top[j], j});
+            req[j]--;
+            if (!req[j]) { 
+                deb(j);
+                q.push({top[j], j});
+            }
         }
     }
+    deb(ans);
+    ll m = 0;
+    REP(i, n)
+        m = max(m, i+(top[ans[n-1-i]]));
+    cout<<m<<endl;
 }
 
 int main() {

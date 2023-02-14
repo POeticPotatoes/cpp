@@ -31,22 +31,32 @@ constexpr int MOD = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r, n, c, ans, x;
+ll n, m;
+string A[2];
+
+bool check(ll p) {
+    for (int i=0;i<n;i++) {
+        if (A[p][i]) {
+            //deb(i-1, m);
+            return (i-1==m);
+        }
+        if (!A[p^1][i])
+            p ^=1;
+    }
+    return true;
+}
 
 void solve() {
-    cin>>l>>r;
-    if ((l-1)*3 <= r) return (cout<<r/2<<endl);
-    n = r-l+1;
-    ans = max(n, r/2);
-    vll X, K;
-
-    c = (n+1)/2;
-    while (c < n && c < l) {
-        X.eb(x=(l+c-1)/c);
-        K.eb(c);
-        c = ((r+x-2)/(x-1));
+    cin>>n>>A[0]>>A[1];
+    m=-1;
+    REP(i, n) {
+        A[0][i] -= 'B', A[1][i] -= 'B';
+        if (!A[0][i] || !A[1][i]) m = i;
     }
-    
+    //deb(m, (int) A[0][0], (int) A[0][1]);
+    if (check(0) || check(1))
+        cout<<"YES"<<endl;
+    else cout<<"NO"<<endl;
 }
 
 int main() {

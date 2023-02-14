@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 
 #ifdef DEBUG
@@ -27,29 +27,24 @@ typedef long long ll;
 // template <typename T>
 // using MaxHeap = priority_queue<T>;
 // 
-constexpr int M = 1e9+7;
+// constexpr int M = 1e9+7;
 // constexpr int inf = (int)1e9;
 // constexpr ll INF = 1e18;
+const ll N = 3e5;
 
-ll modPow(ll v, ll p) {
-    if (!p) return 1;
-    ll ans = modPow(v, p/2);
-    ans = (ans*ans)%M;
-    if (p&1) ans = (ans*v) %M;
-    return ans;
-}
+ll n, A[N];
 
 void solve() {
-    int n, m, l, r, c;
-    ll v=0;
-    cin>>n>>m;
-    for(int i=0;i<m;i++) {
-        cin>>l>>r>>c;
-        v |= c;
+    cin>>n;
+    for(int i=0;i<n;i++) cin>>A[i];
+    ll neg = 0, k=1e9, sum=0;
+    for (int i=0;i<n;i++) {
+        neg += A[i]<0;
+        k = min(k, abs(A[i]));
+        sum += abs(A[i]);
     }
-    ll ans = modPow(2, n-1);
-    ans = (ans * v) %M;
-    cout<<ans<<endl;
+    if (neg&1) sum-=2*k;
+    cout<<sum<<endl;
 }
 
 int main() {

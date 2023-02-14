@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 
 #ifdef DEBUG
@@ -27,33 +27,41 @@ typedef long long ll;
 // template <typename T>
 // using MaxHeap = priority_queue<T>;
 // 
-constexpr int M = 1e9+7;
+// constexpr int MOD = 1e9+7;
 // constexpr int inf = (int)1e9;
 // constexpr ll INF = 1e18;
 
-ll modPow(ll v, ll p) {
-    if (!p) return 1;
-    ll ans = modPow(v, p/2);
-    ans = (ans*ans)%M;
-    if (p&1) ans = (ans*v) %M;
-    return ans;
+int n, x, y;
+
+void query(int z) {
+    int a, b;
+    printf("? %d %d\n", x, y);
+    fflush(stdout);
+    cin>>a;
+    printf("? %d %d\n", y, z);
+    fflush(stdout);
+    cin>>b;
+
+    if (a==b) y=z;
+    if (a<b) x=z;
 }
 
 void solve() {
-    int n, m, l, r, c;
-    ll v=0;
-    cin>>n>>m;
-    for(int i=0;i<m;i++) {
-        cin>>l>>r>>c;
-        v |= c;
+    cin>>n;
+    x=1, y=2;
+    for (int i=3;i<=n;i++) {
+        query(i);
     }
-    ll ans = modPow(2, n-1);
-    ans = (ans * v) %M;
-    cout<<ans<<endl;
+    printf("! %d %d\n", x, y);
 }
 
 int main() {
     int t=1;
     cin >> t; // Comment this out if there are no tests
-    while (t--) solve();
+    while (t--) {
+        int v;
+        solve();
+        cin>>v;
+        if (v!=1) break;
+    }
 }

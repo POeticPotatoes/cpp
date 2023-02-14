@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 
 #ifdef DEBUG
@@ -27,28 +27,39 @@ typedef long long ll;
 // template <typename T>
 // using MaxHeap = priority_queue<T>;
 // 
-constexpr int M = 1e9+7;
+// constexpr int M = 1e9+7;
 // constexpr int inf = (int)1e9;
 // constexpr ll INF = 1e18;
 
-ll modPow(ll v, ll p) {
-    if (!p) return 1;
-    ll ans = modPow(v, p/2);
-    ans = (ans*ans)%M;
-    if (p&1) ans = (ans*v) %M;
-    return ans;
-}
+const ll N=3e5;
+
+ll n, c, A[N], vis[N];
 
 void solve() {
-    int n, m, l, r, c;
-    ll v=0;
-    cin>>n>>m;
-    for(int i=0;i<m;i++) {
-        cin>>l>>r>>c;
-        v |= c;
+    cin>>n>>c;
+    for(ll i=1;i<=n;i++) cin>>A[i];
+    memset(vis, 0, sizeof(ll)*n);
+    vector<ll> P(n+1), S(n+1);
+    for(ll i=1;i<=n;i++)
+        P[i] = (min(i, n-i+1) + A[i]);
+    sort(P.begin(), P.end());
+    for(ll i=1;i<=n;i++) S[i] = S[i-1] + P[i];
+    // deb(P, S);
+
+    ll ans = 0;
+    for(ll i=1;i<=n;i++) {
+        ll v = A[i]+i, s = min(i, n-i+1) + A[i];
+        if (c<v) continue;
+        ll p = upper_bound(S.begin(), S.end(), c-v) - S.begin();
+        // deb(i, v, P[i], p);
+        if (p<=n && P[p] > s) {
+            p = upper_bound(S.begin(), S.end(), c-v+s) - S.begin() - 1;
+            // deb(1);
+        }
+        if (p>n) p=n;
+        // deb(p);
+        ans = max(ans, p);
     }
-    ll ans = modPow(2, n-1);
-    ans = (ans * v) %M;
     cout<<ans<<endl;
 }
 
