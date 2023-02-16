@@ -31,30 +31,19 @@ typedef long long ll;
 // constexpr int inf = (int)1e9;
 // constexpr ll INF = 1e18;
 
-const ll N=3e5;
+const ll N = 3e5;
 
-ll n, c, A[N], vis[N];
+ll n, A[N]{};
 
 void solve() {
-    cin>>n>>c;
-    for(ll i=1;i<=n;i++) cin>>A[i];
-    memset(vis, 0, sizeof(ll)*n);
-    vector<ll> P(n+1), S(n+1);
-    for(ll i=1;i<=n;i++)
-        P[i] = (min(i, n-i+1) + A[i]);
-    sort(P.begin(), P.end());
-    for(ll i=1;i<=n;i++) S[i] = S[i-1] + P[i];
-
-    ll ans = 0;
-    for(ll i=1;i<=n;i++) {
-        ll v = A[i]+i, s = min(i, n-i+1) + A[i];
-        if (c<v) continue;
-        ll p = upper_bound(S.begin(), S.end(), c-v) - S.begin();
-        if (p<=n && P[p] > s) {
-            p = upper_bound(S.begin(), S.end(), c-v+s) - S.begin() - 1;
-        }
-        if (p>n) p=n;
-        ans = max(ans, p);
+    cin>>n;
+    for (int i=1;i<=n;i++) cin>>A[i];
+    sort(A+1, A+n+1);
+    ll ans=0;
+    for (int i=1;i<=n;i++) {
+        if (A[i]-1<=A[i-1]) continue;
+        ans += A[i]-A[i-1]-1;
+        A[i] = A[i-1]+1;
     }
     cout<<ans<<endl;
 }

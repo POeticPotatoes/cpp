@@ -31,32 +31,32 @@ typedef long long ll;
 // constexpr int inf = (int)1e9;
 // constexpr ll INF = 1e18;
 
-const ll N=3e5;
+#define ra(a, b) (a>0?(a+b-1)/b:(a-b+1)/b)
 
-ll n, c, A[N], vis[N];
+ll x, y;
 
 void solve() {
-    cin>>n>>c;
-    for(ll i=1;i<=n;i++) cin>>A[i];
-    memset(vis, 0, sizeof(ll)*n);
-    vector<ll> P(n+1), S(n+1);
-    for(ll i=1;i<=n;i++)
-        P[i] = (min(i, n-i+1) + A[i]);
-    sort(P.begin(), P.end());
-    for(ll i=1;i<=n;i++) S[i] = S[i-1] + P[i];
-
-    ll ans = 0;
-    for(ll i=1;i<=n;i++) {
-        ll v = A[i]+i, s = min(i, n-i+1) + A[i];
-        if (c<v) continue;
-        ll p = upper_bound(S.begin(), S.end(), c-v) - S.begin();
-        if (p<=n && P[p] > s) {
-            p = upper_bound(S.begin(), S.end(), c-v+s) - S.begin() - 1;
-        }
-        if (p>n) p=n;
-        ans = max(ans, p);
+    cin>>x>>y;
+    if (x==y) {
+        cout<<1<<endl<<x<<endl;
+        return;
     }
-    cout<<ans<<endl;
+    ll diff= abs(x-y);
+    vector<ll> ans;
+    ll n = diff*2, div = (diff+1)/2;
+    cout<<n<<endl;
+    ll a = ra(x, div), b = ra(y, div), cur, orig=a;
+    deb(diff, div, a, b);
+    while (div--) {
+        cout<<(cur=a)<<" ";
+        x -= a, y -= b;
+        while (cur!=b) cout<<--cur<<" ";
+        if (!div) a = orig;
+        else a = ra(x, div), b = ra(y, div);
+        // deb(x, y, div, a, b);
+        while (++cur!=a) cout<<cur<<" ";
+    }
+    cout<<endl;
 }
 
 int main() {

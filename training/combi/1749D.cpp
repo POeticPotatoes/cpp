@@ -27,40 +27,48 @@ typedef long long ll;
 // template <typename T>
 // using MaxHeap = priority_queue<T>;
 // 
-// constexpr int M = 1e9+7;
+constexpr int M = 998244353;
 // constexpr int inf = (int)1e9;
 // constexpr ll INF = 1e18;
 
-const ll N=3e5;
+const ll N = 4e5;
 
-ll n, c, A[N], vis[N];
-
+ll n, m, P[N];
 void solve() {
-    cin>>n>>c;
-    for(ll i=1;i<=n;i++) cin>>A[i];
-    memset(vis, 0, sizeof(ll)*n);
-    vector<ll> P(n+1), S(n+1);
-    for(ll i=1;i<=n;i++)
-        P[i] = (min(i, n-i+1) + A[i]);
-    sort(P.begin(), P.end());
-    for(ll i=1;i<=n;i++) S[i] = S[i-1] + P[i];
-
-    ll ans = 0;
-    for(ll i=1;i<=n;i++) {
-        ll v = A[i]+i, s = min(i, n-i+1) + A[i];
-        if (c<v) continue;
-        ll p = upper_bound(S.begin(), S.end(), c-v) - S.begin();
-        if (p<=n && P[p] > s) {
-            p = upper_bound(S.begin(), S.end(), c-v+s) - S.begin() - 1;
-        }
-        if (p>n) p=n;
-        ans = max(ans, p);
+    cin>>n>>m;
+    P[1]=1;
+    for (int i=2;i<=n;i++) {
+        if (P[i]) continue;
+        for (int j=i*2;j<=n;j+=i) P[j]=1;
     }
-    cout<<ans<<endl;
+
+    // We need to use inclusion exclusion
+    // // No we don't youfucking retard
+    vector<pair<ll, ll>> INX;
+    ll ans=m, cur=0, sum=0, k=m*m;
+    for (int i=2;i<=n;i++, k=(k*m)%M) {
+        if (i>m) cur=0;
+        else if (!P[i]) {
+            cur += m/i;
+            deb(cur);
+            for (auto [a,b]: INX) {
+                INX.emplace_back(a*i, b+1);
+                deb(i, a, b, a*i);
+                if (b&1) cur -= m/(a*i);
+                else cur += m/(a*i);
+            }
+            deb(cur);
+            INX.emplace_back(i, 1);
+        }
+        ans = (ans*cur) %M;
+        sum = (sum+(k-ans)%M)%M;
+        deb(i, ans, sum, k);
+    }
+    cout<<sum<<endl;
 }
 
 int main() {
     int t=1;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }

@@ -31,36 +31,53 @@ typedef long long ll;
 // constexpr int inf = (int)1e9;
 // constexpr ll INF = 1e18;
 
-const ll N=3e5;
+const ll N = 3e5;
 
-ll n, c, A[N], vis[N];
+ll n, A[N], B[N];
 
 void solve() {
-    cin>>n>>c;
-    for(ll i=1;i<=n;i++) cin>>A[i];
-    memset(vis, 0, sizeof(ll)*n);
-    vector<ll> P(n+1), S(n+1);
-    for(ll i=1;i<=n;i++)
-        P[i] = (min(i, n-i+1) + A[i]);
-    sort(P.begin(), P.end());
-    for(ll i=1;i<=n;i++) S[i] = S[i-1] + P[i];
+    cin>>n;
+    ll c;
+    for(int i=1;i<=n;i++) {
+        cin>>c;
+        A[c]=i;
+    }
+    for(int i=1;i<=n;i++) {
+        cin>>c;
+        B[c]=i;
+    }
+    ll l=0, r=n, ans=1;
+    l = min(A[1], B[1]);
+    r = max(A[1], B[1]);
+    ans += (l-1)*(l-2)/2;
+    ans += l-1;
+    deb(ans);
+    ans += (n-r)*(n-r-1)/2;
+    ans += n-r;
+    deb(ans);
+    ans += (r-l-1)*(r-l-2)/2;
+    ans += r-l-1;
+    deb(ans);
 
-    ll ans = 0;
-    for(ll i=1;i<=n;i++) {
-        ll v = A[i]+i, s = min(i, n-i+1) + A[i];
-        if (c<v) continue;
-        ll p = upper_bound(S.begin(), S.end(), c-v) - S.begin();
-        if (p<=n && P[p] > s) {
-            p = upper_bound(S.begin(), S.end(), c-v+s) - S.begin() - 1;
+    for (int i=2;i<=n;i++) {
+        deb(i, l, r, ans);
+        if ((A[i]<l || A[i]>r) && (B[i]<l || B[i]>r)) {
+            ll z = 0, m = n+1;
+            if (A[i] < l) z=A[i];
+            else m = A[i];
+            if (B[i] < l) z=max(z, B[i]);
+            else m = min(m, B[i]);
+            deb(z, m, l-z, m-r);
+            ans += (l-z) * (m-r);
         }
-        if (p>n) p=n;
-        ans = max(ans, p);
+        l = min({l, A[i], B[i]});
+        r = max({r, A[i], B[i]});
     }
     cout<<ans<<endl;
 }
 
 int main() {
     int t=1;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
