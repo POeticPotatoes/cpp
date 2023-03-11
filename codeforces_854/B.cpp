@@ -30,23 +30,30 @@ constexpr int M = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r;
+const ll N = 200;
+
+ll n, A[N];
 
 void solve() {
-    cin>>l>>r;
-    ll n = r-l, ans = n/2, a=ans+1, i=r/a;
-    while (i>1 && a<=n) {
-        deb(i, a, ans);
-        ll b = (r/i)+1, d = min(b, (l+i-2)/(i-1));
-        ans -= max(0LL, d-a);
-        deb((l+i-2)/(i-1), ans);
-        deb(b);
-        i--;
-        ans += b-a;
-        a = b;
+    cin>>n;
+    FORN(i, 1, n) cin>>A[i];
+    ll o = 0, d=A[1], p=1;
+    FORN(i, 1, n) {
+        o+=A[i]==1;
+        if (A[i] < d) d=A[i], p=i;
     }
-    deb(i, a);
-    cout<<ans<<endl;
+    if (o) return (void) (cout<<(o==n?"0\n":"-1\n"));
+    vector<pair<ll, ll>> ans;
+    FORN(i, 1, n) {
+        if (i==p) continue;
+        while (A[i] > d) {
+            ans.emplace_back(i, p);
+            A[i] = (A[i]+d-1)/d;
+        }
+        if (A[i] < d) d = A[i], p = i, i=0;
+    }
+    cout<<ans.size()<<endl;
+    for (auto [a, b]: ans) printf("%lld %lld\n", a, b);
 }
 
 int main() {

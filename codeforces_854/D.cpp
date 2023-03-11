@@ -30,26 +30,34 @@ constexpr int M = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r;
+const ll N = 3e5+1;
+
+int n, k, c, j, A[N], C[N], D[N], vis[N];
+ll DP[N], s;
 
 void solve() {
-    cin>>l>>r;
-    ll n = r-l, ans = n/2, a=ans+1, i=r/a;
-    while (i>1 && a<=n) {
-        deb(i, a, ans);
-        ll b = (r/i)+1, d = min(b, (l+i-2)/(i-1));
-        ans -= max(0LL, d-a);
-        deb((l+i-2)/(i-1), ans);
-        deb(b);
-        i--;
-        ans += b-a;
-        a = b;
+    cin>>n>>k;
+    FORN(i, 1, n) cin>>A[i];
+    FORN(i, 1, k) cin>>C[i];
+    FORN(i, 1, k) {
+        cin>>c;
+        D[i] = C[i] - c;
     }
-    deb(i, a);
-    cout<<ans<<endl;
+    s=0, DP[0] = 0;
+    memset(vis+1, 0, sizeof(int)*k);
+    FORN(i, 1, n) {
+        c = A[i], j = vis[c], vis[c] = i, s += C[c], DP[i] = DP[i-1];
+        if (c == A[i-1]) {
+            s -= D[c];
+            continue;
+        }
+        if (j) DP[i] = max(DP[j+1]+D[c], DP[i]);
+    }
+    cout<<s-DP[n]<<endl;
 }
 
 int main() {
+    IO;
     int t=1;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();

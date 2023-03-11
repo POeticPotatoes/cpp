@@ -26,27 +26,23 @@ using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 template <typename T>
 using MaxHeap = priority_queue<T>;
 
-constexpr int M = 1e9+7;
+constexpr int M = 998244353;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r;
+ll l, r, n, s;
 
 void solve() {
     cin>>l>>r;
-    ll n = r-l, ans = n/2, a=ans+1, i=r/a;
-    while (i>1 && a<=n) {
-        deb(i, a, ans);
-        ll b = (r/i)+1, d = min(b, (l+i-2)/(i-1));
-        ans -= max(0LL, d-a);
-        deb((l+i-2)/(i-1), ans);
-        deb(b);
-        i--;
-        ans += b-a;
-        a = b;
-    }
-    deb(i, a);
-    cout<<ans<<endl;
+    n = log2(r/l)+1;
+    deb(l, r, n);
+    if (n==1) return (void) (cout<<"1 "<<r-l+1<<endl);
+    s = (r>>(n-1))-l+1;
+    ll th = max(0LL, (((r>>(n-2))/3)-l+1));
+    th = (th * (n-1)) %M;
+    deb(s, th);
+    s = (s + th) %M;
+    cout<<n<<" "<<s<<endl;
 }
 
 int main() {

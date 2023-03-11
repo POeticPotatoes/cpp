@@ -30,23 +30,46 @@ constexpr int M = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r;
+const ll N = 2e5;
+
+string s;
+ll n, t, C[26];
+char A[N];
 
 void solve() {
-    cin>>l>>r;
-    ll n = r-l, ans = n/2, a=ans+1, i=r/a;
-    while (i>1 && a<=n) {
-        deb(i, a, ans);
-        ll b = (r/i)+1, d = min(b, (l+i-2)/(i-1));
-        ans -= max(0LL, d-a);
-        deb((l+i-2)/(i-1), ans);
-        deb(b);
-        i--;
-        ans += b-a;
-        a = b;
+    cin>>s;
+    n = s.size(), A[n] = 0, t=0;
+    memset(C, 0, sizeof(ll)*26);
+    for (auto c:s) t += !C[c-'a']++;
+    char carry = 0;
+    int l=0, r=n-1;
+    REP(i, 26) {
+        if (!C[i]) continue;
+        char c = 'a'+i;
+        t--;
+        while (C[i]>1) {
+            A[l++] = c, A[r--] = c;
+            C[i]-=2;
+        }
+        if (C[i]) {
+            carry = c;
+            break;
+        }
     }
-    deb(i, a);
-    cout<<ans<<endl;
+    if (carry) {
+        if (t==1) {
+            int j;
+            for(j=25;!C[j];j--);
+            char c = 'a' + j;
+            while (l<r) A[l++] = c, A[r--] = c;
+            A[l] = carry;
+        } else {
+            C[carry-'a']--;
+            A[r--] = carry;
+            ROF(i, 25, -1) while (C[i]--) A[r--] = 'a'+i;
+        }
+    }
+    cout<<A<<endl;
 }
 
 int main() {

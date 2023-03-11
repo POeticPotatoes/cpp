@@ -30,23 +30,36 @@ constexpr int M = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r;
+const ll N = 3e5;
+
+ll n, A[N], B[N], S[N], E[N], C[N];
 
 void solve() {
-    cin>>l>>r;
-    ll n = r-l, ans = n/2, a=ans+1, i=r/a;
-    while (i>1 && a<=n) {
-        deb(i, a, ans);
-        ll b = (r/i)+1, d = min(b, (l+i-2)/(i-1));
-        ans -= max(0LL, d-a);
-        deb((l+i-2)/(i-1), ans);
-        deb(b);
-        i--;
-        ans += b-a;
-        a = b;
+    cin>>n;
+    FORN(i, 1, n) cin>>A[i];
+    FORN(i, 1, n) cin>>B[i];
+    FORN(i, 1, n) S[i] = S[i-1]+B[i];
+    memset(C, 0, sizeof(ll)*(n+1));
+    memset(E, 0, sizeof(ll)*(n+1));
+
+    FORN(i, 1, n) {
+        ll k = A[i]+S[i-1];
+        ll p = upper_bound(S, S+n+1, k) - S;
+        deb(i, A[i], p, k);
+        ll v = k-S[p];
+        E[p] += v;
+        C[p]++;
     }
-    deb(i, a);
-    cout<<ans<<endl;
+    ll s=0, v=1;
+    FORN(i, 1, n) {
+        s = E[i];
+        ll t = v*B[i];
+        cout<<t+s<<" ";
+        // deb(i, s, v, t);
+        v -= C[i];
+        v++;
+    }
+    cout<<endl;
 }
 
 int main() {

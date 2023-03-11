@@ -30,23 +30,18 @@ constexpr int M = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r;
+string a, b;
 
 void solve() {
-    cin>>l>>r;
-    ll n = r-l, ans = n/2, a=ans+1, i=r/a;
-    while (i>1 && a<=n) {
-        deb(i, a, ans);
-        ll b = (r/i)+1, d = min(b, (l+i-2)/(i-1));
-        ans -= max(0LL, d-a);
-        deb((l+i-2)/(i-1), ans);
-        deb(b);
-        i--;
-        ans += b-a;
-        a = b;
-    }
-    deb(i, a);
-    cout<<ans<<endl;
+    cin>>a;
+    cin>>b;
+    ll n = a.size(), m = b.size();
+    if (a[0]==b[0]) return (void) printf("YES\n%c*\n", a[0]);
+    if (a.back()==b.back()) return (void) printf("YES\n*%c\n", a.back());
+    REP(i, n-1) REP(j, m-1)
+        if (a[i]==b[j] && a[i+1]==b[j+1]) 
+            return (void) printf("YES\n*%c%c*\n", a[i], a[i+1]);
+    printf("NO\n");
 }
 
 int main() {

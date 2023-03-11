@@ -30,23 +30,22 @@ constexpr int M = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r;
+const ll N = 2e5;
+
+ll n, m, A[N], vis[N], L[N];
 
 void solve() {
-    cin>>l>>r;
-    ll n = r-l, ans = n/2, a=ans+1, i=r/a;
-    while (i>1 && a<=n) {
-        deb(i, a, ans);
-        ll b = (r/i)+1, d = min(b, (l+i-2)/(i-1));
-        ans -= max(0LL, d-a);
-        deb((l+i-2)/(i-1), ans);
-        deb(b);
-        i--;
-        ans += b-a;
-        a = b;
+    cin>>n>>m;
+    REP(i, m) cin>>A[i];
+    memset(L+1, 0xff, sizeof(ll)*n);
+    memset(vis, 0, sizeof(ll)*(m+1));
+    ll *p = L+n;
+    REP(i, m) {
+        if (!vis[A[i]-n]++) *p--=i+1;
+        if (p==L) break;
     }
-    deb(i, a);
-    cout<<ans<<endl;
+    FORN(i, 1, n) cout<<L[i]<<" ";
+    cout<<endl;
 }
 
 int main() {

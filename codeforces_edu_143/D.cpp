@@ -26,31 +26,47 @@ using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 template <typename T>
 using MaxHeap = priority_queue<T>;
 
-constexpr int M = 1e9+7;
+constexpr int M = 998244353;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r;
+const ll N = 4e5;
+
+ll n, A[N][3], ans;
+
+ll modPow(ll v, ll p) {
+    if (!p) return 1;
+    ll ans = modPow(v, p/2);
+    ans = (ans*ans) %M;
+    if (p&1) ans = (ans*v) %M;
+    return ans;
+}
 
 void solve() {
-    cin>>l>>r;
-    ll n = r-l, ans = n/2, a=ans+1, i=r/a;
-    while (i>1 && a<=n) {
-        deb(i, a, ans);
-        ll b = (r/i)+1, d = min(b, (l+i-2)/(i-1));
-        ans -= max(0LL, d-a);
-        deb((l+i-2)/(i-1), ans);
-        deb(b);
-        i--;
-        ans += b-a;
-        a = b;
+    cin>>n;
+    n /= 3;
+    REP(i, n) REP(j, 3) cin>>A[i][j];
+    ans = 1;
+    REP(i, n) {
+        ll c = 1, s=A[i][0]+A[i][1]+A[i][2], m=0;
+        REP(j, 3) {
+            if (m < s-A[i][j]) {
+                m = s-A[i][j];
+                c=1;
+            } else c += m == s-A[i][j];
+        }
+        deb(i, c);
+        ans = (ans*c) %M;
     }
-    deb(i, a);
+    for (int i=n/2+1;i<=n;i++) ans = (ans*i) %M;
+    ll d=1;
+    for (int i=1;i<=n/2;i++) d = (d*i) %M;
+    ans = (ans * modPow(d, M-2)) %M;
     cout<<ans<<endl;
 }
 
 int main() {
     int t=1;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }

@@ -30,23 +30,20 @@ constexpr int M = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r;
+const ll N = 30;
+
+ll n, m, t;
+char A[N], B[N];
 
 void solve() {
-    cin>>l>>r;
-    ll n = r-l, ans = n/2, a=ans+1, i=r/a;
-    while (i>1 && a<=n) {
-        deb(i, a, ans);
-        ll b = (r/i)+1, d = min(b, (l+i-2)/(i-1));
-        ans -= max(0LL, d-a);
-        deb((l+i-2)/(i-1), ans);
-        deb(b);
-        i--;
-        ans += b-a;
-        a = b;
-    }
-    deb(i, a);
-    cout<<ans<<endl;
+    cin>>n>>m;
+    REP(i, n) cin>>A[i];
+    REP(i, m) cin>>B[i];
+    t=0;
+    FOR(i, 1, n) t+= A[i] == A[i-1];
+    FOR(i, 1, m) t+= B[i] == B[i-1];
+    t += A[n-1] == B[m-1];
+    cout<<(t>1?"NO\n":"YES\n");
 }
 
 int main() {

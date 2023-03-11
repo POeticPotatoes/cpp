@@ -30,26 +30,21 @@ constexpr int M = 1e9+7;
 constexpr int inf = (int)1e9;
 constexpr ll INF = 1e18;
 
-ll l, r;
+string s, A;
+ll n;
 
 void solve() {
-    cin>>l>>r;
-    ll n = r-l, ans = n/2, a=ans+1, i=r/a;
-    while (i>1 && a<=n) {
-        deb(i, a, ans);
-        ll b = (r/i)+1, d = min(b, (l+i-2)/(i-1));
-        ans -= max(0LL, d-a);
-        deb((l+i-2)/(i-1), ans);
-        deb(b);
-        i--;
-        ans += b-a;
-        a = b;
-    }
-    deb(i, a);
-    cout<<ans<<endl;
+    cin>>n;
+    cin>>A;
+    cout<<(s.find(A)==string::npos?"NO\n":"YES\n");
 }
 
 int main() {
+    FORN(i, 1, 15) {
+        if (!(i%3)) s += "F";
+        if (!(i%5)) s += "B";
+    }
+    REP(i, 3) s += s;
     int t=1;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
