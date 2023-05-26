@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+using namespace std;
+#ifdef DEBUG
+    #include </home/poeticpotato/work/cpp/debug.h>
+#else
+  #define deb(x...)
+#endif
+#define IO cin.sync_with_stdio(false); cin.tie(0); cout.tie(0);
+#define FOR(i, a, b) for (ll i = (a); (i) < (b); (i)++)
+#define FORN(i, a, b) for (ll i = (a); (i) <= (b); (i)++)
+#define ROF(i, a, b) for (ll i = (a); (i) > (b); (i)--)
+#define REP(i, n) FOR(i, 0, n)
+#define all(x) (x).begin(), (x).end()
+#define eb emplace_back
+typedef long long ll;
+typedef long double ld;
+typedef vector<ll> vll;
+template <typename T>
+using vv = vector<vector<T>>;
+template <typename T>
+using vvv = vector<vv<T>>;
+template <typename T, typename N>
+using um = unordered_map<T, N>;
+template <typename T>
+using MinHeap = priority_queue<T, vector<T>, greater<T>>;
+template <typename T>
+using MaxHeap = priority_queue<T>;
+
+const ll MOD[] = {999727999, 1070777777, 1000000007, 998244353};
+mt19937_64 rng(chrono::system_clock::now().time_since_epoch().count());
+const int M = MOD[2];
+const int inf = (int)1e9;
+const ll INF = 1e18;
+
+const ll N = 3e5;
+
+ll n, A[N], B[N], ans;
+
+void solve() {
+    cin>>n;
+    REP(i, n) cin>>A[i]>>B[i];
+    ll l=0, c = A[0] * B[0], d = B[0];
+    ans = 1;
+    FOR(i, 1, n) {
+        ll x = __gcd(c, A[i]*B[i]);
+        ll y = d * B[i] / __gcd(d, B[i]);
+        if (!(x%y)) {
+            c = x, d = y;
+            continue;
+        }
+        // FOR(j, l, i) ans[j] = B[j]*A[j]/c;
+        ans++;
+        l = i, c = A[i] * B[i], d = B[i];
+    }
+    // FOR(j, l, n) ans[j] = B[j]*A[j]/c;
+    // REP(i, n) printf("%lld(%lld) ", ans[i], A[i]/ans[i]*B[i]);
+    // cout<<endl;
+    cout<<ans<<endl;
+}
+
+int main() {
+    int t=1;
+    cin >> t; // Comment this out if there are no tests
+    while (t--) solve();
+}
