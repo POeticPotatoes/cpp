@@ -32,43 +32,29 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, m;
 
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
+    cin>>n>>m;
+    if (n==4) {
+        FORN(i, 1, 4) {
+            REP(j, m) printf("%2lld ", i+j*n);
+            printf("\n");
         }
-        H[i] = A[i];
+        return;
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    for (int i=0;i<n;i+=2) {
+        FORN(j, 1, m) printf("%2lld ", i*m+j);
+        printf("\n");
     }
-    cout<<u<<"\n";
+    for (int i=1;i<n;i+=2) {
+        FORN(j, 1, m) printf("%2lld ", i*m+j);
+        printf("\n");
+    }
 }
 
 int main() {
     int t=1;
-    IO;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

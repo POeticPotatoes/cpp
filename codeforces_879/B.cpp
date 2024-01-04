@@ -32,43 +32,23 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+string a, b;
 
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+    cin>>a>>b;
+    if (a.size()!=b.size()) {
+        if (a.size()>b.size()) swap(a, b);
+        return (void) (cout<<9*(b.size()-1) + (b[0]-'0')<<"\n");
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    if (a>b) swap(a, b);
+    ll k=0;
+    while (k<a.size() && a[k] == b[k]) k++;
+    if (k==a.size()) return (void) (cout<<"0\n");
+    cout<<9*(a.size()-1-k) + b[k] - a[k]<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

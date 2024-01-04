@@ -34,41 +34,28 @@ const ll INF = 1e18;
 
 const ll N = 3e5;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, A[N];
 
 void solve() {
     cin>>n;
-    m = 0;
+    REP(i, n) cin>>A[i];
+    A[n] = 0;
+    
+    vll flip;
+    ll r = n-1;
+    FORN(i, 1, n) {
+        while (r>=0 && A[r] < i) r--;
+        flip.eb(r+1);
+    }
+    deb(flip);
     REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+        if (A[i] != flip[i]) return (void) (cout<<"NO\n");
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    cout<<"YES\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    cin >> t;
     while (t--) solve();
 }
-

@@ -32,43 +32,36 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+struct cmp {
+    bool operator () (const pair<ll, ll> &a, const pair<ll, ll> &b) {
+        return a.first==b.first?a.second>b.second:a.first<b.first;
+    }
+};
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+const ll N=3e5;
+pair<ll, ll> A[N];
 
 void solve() {
+    ll n;
     cin>>n;
-    m = 0;
+    REP(i, n) cin>>A[i].first>>A[i].second;
+    sort(A, A+n, cmp());
+
+    ll x=0, h=0, ans=0;
     REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
+        if (A[i].first<=h) {
+            x=0;
+            continue;
         }
-        H[i] = A[i];
+        x = i && A[i].first != A[i-1].first? 1:x+1;
+        ans+= A[i].second;
+        h = max(h, x);
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    cout<<ans<<endl;
 }
 
 int main() {
     int t=1;
-    IO;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

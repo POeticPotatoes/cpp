@@ -32,43 +32,67 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+const ll N = 301;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, lim, s=0, j, v, A[N], V[N], DP[N][N*N];
+
+void first() {
+    cout<<"First\n";
+    ll p=1;
+    while (1) {
+        cout<<p<<endl;
+        cin>>j;
+        if (j<=0) return;
+        v = min(A[p], A[j]);
+        A[p] -= v;
+        A[j] -= v;
+        while (!A[p]) p++;
+    }
+}
+
+void second() {
+    cout<<"Second\n";
+    ll p=lim;
+    ROF(i, n, 0) {
+        V[i] = DP[i][p]-1;
+        p = p - (DP[i][p]-1)*A[i];
+    }
+    ll c[2]{1, 1};
+    while (!V[c[1]]) c[1]++;
+    while (V[c[0]]) c[0]++;
+    while (1) {
+        cin>>j;
+        if (j<=0) return;
+        ll t = V[j];
+        ll &o = c[t^1];
+        while (V[o] == t || !A[o]) o++;
+        cout<<o<<endl;
+        v = min(A[j], A[o]);
+        A[o] -= v, A[j] -= v;
+    }
+}
 
 void solve() {
     cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
+    FORN(i, 1, n) {
+        cin>>A[i];
+        s+=A[i];
+    }
+    if (s&1) return first();
+    lim = s>>1;
+    DP[0][0] = 1;
+    FORN(i, 1, n) {
+        FORN(k, 0, lim) {
+            if (k-A[i]>=0 && DP[i-1][k-A[i]]) DP[i][k] = 2;
+            if (DP[i-1][k]) DP[i][k] = 1;
         }
-        H[i] = A[i];
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    if (!DP[n][lim]) return first();
+    second();
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

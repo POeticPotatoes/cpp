@@ -32,43 +32,35 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+const ll N = 1e5 + 10;
+ll n, A[N], S[N];
 
 void solve() {
     cin>>n;
-    m = 0;
+    REP(i, n) cin>>A[i];
+    if (n==1) return (void) (cout<<A[0]);
+    bitset<N> DP;
+    DP[0] = 1;
+    S[0] = A[0];
+    FOR(i, 1, n) S[i] = S[i-1] + A[i]-1;
+    
+    ll ans=0;
     REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+        deb(S[i]);
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    REP(i, n) {
+        ll p = DP._Find_next(max(i-1, n-A[i]-2));
+        if (p < N) ans = max(ans, S[n-1]+n-1 - (p+A[i]));
+        deb(i, p, S[n-1]+n-1, p+A[i]+1, ans);
+        DP |= (DP & (bitset<N>().flip()<<i))<<A[i];
     }
-    cout<<u<<"\n";
+    REP(i, n) if (DP[i])
+        ans = max(ans, S[i]);
+    cout<<ans<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t;
     while (t--) solve();
 }
-

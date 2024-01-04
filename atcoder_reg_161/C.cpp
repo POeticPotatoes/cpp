@@ -1,4 +1,23 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <algorithm>
+#include <cmath>
+#include <vector>
+#include <set>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+#include <queue>
+#include <ctime>
+#include <cassert>
+#include <complex>
+#include <string>
+#include <cstring>
+#include <chrono>
+#include <random>
+#include <bitset>
+#include <array>
 using namespace std;
 #ifdef DEBUG
     #include </home/poeticpotato/work/cpp/debug.h>
@@ -34,41 +53,45 @@ const ll INF = 1e18;
 
 const ll N = 3e5;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, a, b, B[N][2];
+string s;
+vv<ll> adj;
+vll ans;
+
+bool dfs(ll v, ll p) {
+    deb(v, p);
+    B[v][0] = 0, B[v][1] = 0;
+    ans[v] = -1;
+    bool par = s[v-1] == 'W';
+    for (auto c: adj[v]) if (c!=p) {
+        if (!dfs(c, v)) return false;
+        if (ans[c] == -1) ans[c] = par;
+        B[v][ans[c]]++;
+        if (B[c][0] == B[c][1]) {
+            if (ans[v]>-1 && ans[v] != (s[c-1] == 'W')) return false;
+            else ans[v] = s[c-1] == 'W';
+        }
+    }
+    return B[v][par] >= B[v][par^1];
+}
 
 void solve() {
     cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+    adj = vv<ll>(n+1);
+    ans = vll(n+1);
+    FOR(i, 1, n) {
+        cin>>a>>b;
+        adj[a].eb(b);
+        adj[b].eb(a);
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    cin>>s;
+    if (!dfs(1, -1)) return (void) (cout<<"-1\n");
+    FORN(i, 1, n) cout<<(ans[i]?'W':'B');
+    cout<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

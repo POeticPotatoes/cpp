@@ -32,43 +32,39 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+const ll N = 2001;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, m, k;
+pair<ll, ll> A[N];
 
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+    cin>>n>>m>>k;
+    REP(i, m) cin>>A[i].first>>A[i].second;
+    vll T(n+1);
+    REP(i, m) {
+        auto &[a, b] = A[i];
+        FORN(j, a, b) T[j] = max(T[j], b);
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    sort(A, A+m);
+
+    vv<ll> DP(n+1, vll(k+1, inf));
+    DP[0][0] = 0;
+
+    FORN(i, 1, n) {
+        FORN(j, 0, k) DP[i][j] = min(DP[i][j], DP[i-1][j]+1);
+        if (T[i]>=i) FORN(j, 1, k) DP[T[i]][j] = min(DP[T[i]][j], DP[i-1][j-1]);
     }
-    cout<<u<<"\n";
+    deb(DP);
+    ll ans = INF;
+    FORN(j, 0, k) ans = min(ans, DP[n][j]);
+    cout<<n-ans<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
-    while (t--) solve();
+    cin >> t;
+    FORN(i, 1, t) {
+        printf("Case #%lld: ", i);
+        solve();
+    }
 }
-

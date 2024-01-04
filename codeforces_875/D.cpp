@@ -6,8 +6,8 @@ using namespace std;
   #define deb(x...)
 #endif
 #define IO cin.sync_with_stdio(false); cin.tie(0); cout.tie(0);
-#define FOR(i, a, b) for (ll i = (a); (i) < (b); (i)++)
-#define FORN(i, a, b) for (ll i = (a); (i) <= (b); (i)++)
+#define FOR(i, a, b) for (int i = (a); (i) < (b); (i)++)
+#define FORN(i, a, b) for (int i = (a); (i) <= (b); (i)++)
 #define ROF(i, a, b) for (ll i = (a); (i) > (b); (i)--)
 #define REP(i, n) FOR(i, 0, n)
 #define all(x) (x).begin(), (x).end()
@@ -32,43 +32,39 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+const ll N = 2e5+5;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+int n, lim, V[640][N];
+pair<int, int> A[N];
+
+int get(int a, int b) { 
+    return a<=lim&&b>=1&&b<=n?V[a][b]:0; 
+}
 
 void solve() {
     cin>>n;
-    m = 0;
+    lim = ceil(sqrt(n<<1));
+    REP(i, n) cin>>A[i].first;
+    REP(i, n) cin>>A[i].second;
+
+    REP(i, n) if (A[i].first<=lim) V[A[i].first][A[i].second]++;
+    ll ans=0, s=0;
+
+    REP(i, n) s += get(A[i].first, A[i].first*A[i].first-A[i].second); 
+    for (int i=2; i<=lim; i+=2) s -= get(i, (i*i)>>1);
+    ans += s>>1;
+
     REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+        ll m = min(A[i].first-1, lim);
+        FORN(j, 1, m) ans += get(j, A[i].first*j-A[i].second);
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+
+    FORN(i, 1, lim) FORN(j, 1, n) V[i][j] = 0;
+    cout<<ans<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

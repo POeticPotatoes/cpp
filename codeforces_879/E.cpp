@@ -32,43 +32,39 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+const ll N = 4e5;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, m, A[N];
 
 void solve() {
     cin>>n;
-    m = 0;
+    REP(i, n) cin>>A[i];
+    set<ll> V;
+    m = n*n+1;
+    set<ll> C;
+    deb(n, m);
     REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
+        set<ll> K;
+        if (A[i]<=m) {
+            K.insert(A[i]);
+            V.insert(A[i]);
+            for (auto c: C) {
+                ll lcm = (c*A[i]/__gcd(c, A[i]));
+                if (lcm<=m) {
+                    K.insert(lcm);
+                    V.insert(lcm);
+                }
             }
         }
-        H[i] = A[i];
+        deb(i, A[i], K);
+        C = K;
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    deb(V);
+    FORN(i, 1, m) if (!V.count(i)) return (void) (cout<<i<<"\n");
 }
 
 int main() {
     int t=1;
-    IO;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

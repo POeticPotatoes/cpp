@@ -32,43 +32,38 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+const ll N = 600;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, m, A[N], DP[N][N];
+
+ll modPow(ll v, ll p) {
+    if (!p) return 1;
+    ll ans = modPow(v, p/2);
+    ans = (ans*ans)%M;
+    if (p&1) ans = (ans*v) %M;
+    return ans;
+}
+
+ll divid(ll a, ll b) { return a*modPow(b, M-2); }
 
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+    cin>>n>>m;
+    REP(i, n) cin>>A[i];
+    A[n] = m+1;
+
+    FORN(i, 1, m+1) DP[i][m+1] = m+1-i;
+    ROF(j, m, 0) {
+        DP[j][j] = 0;
+        ROF(i, j-1, 0) DP[i][j] = divid((DP[i][j+1] + DP[i+1][j])%M + 1, 2);
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+
+    ll ans = 0;
+    REP(i, n) ans = (ans + DP[A[i]][A[i+1]]) %M;
+    cout<<ans<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t;
     while (t--) solve();
 }
-

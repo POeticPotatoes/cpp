@@ -32,43 +32,50 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
-
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
+    ll w;
+    cin>>w;
+    vector<ll> A;
+    vv<ll> adj;
+
+    function<int()> build = [&]() {
+        ll m, n, p = A.size();
+        cin>>m>>n;
+
+        A.eb(m); 
+        adj.eb(vll());
+        REP(i, n) {
+            ll k = build();
+            adj[p].eb(k);
         }
-        H[i] = A[i];
-    }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+        return p;
+    };
+
+    build();
+
+    ll ans=0;
+    function<int(ll)> dfs = [&](ll v) {
+        vll kids;
+        for (auto c: adj[v]) kids.eb(dfs(c));
+        sort(all(kids));
+        ll sum = accumulate(all(kids), 0);
+        while (sum>w) {
+            ans++;
+            sum -= kids.back();
+            kids.pop_back();
+        }
+
+        ans += (sum+A[v])/w;
+        return (sum+A[v])%w;
+    };
+
+    ans += dfs(0)>0;
+
+    cout<<ans<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t;
     while (t--) solve();
 }
-

@@ -32,43 +32,30 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
-
 void solve() {
-    cin>>n;
-    m = 0;
+    int n; cin>> n;
+    int a[n], b[n];
+    REP(i, n) cin >> a[i];
+    REP(i, n) cin >> b[i];
+    int ga=a[0], gb=b[0];
     REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+        ga = __gcd(ga, a[i]);
+        gb = __gcd(gb, b[i]);
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+
+    if (ga > gb) swap(ga, gb);
+    if (ga == gb) cout << 0 << '\n';
+    else if (gb % ga == 0) cout << 1 << '\n';
+    else cout << 2 << endl;
+    
+
+
+
+    
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    cin >> t;
     while (t--) solve();
 }
-

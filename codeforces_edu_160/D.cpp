@@ -28,47 +28,50 @@ using MaxHeap = priority_queue<T>;
 
 const ll MOD[] = {999727999, 1070777777, 1000000007, 998244353};
 mt19937_64 rng(chrono::system_clock::now().time_since_epoch().count());
-const int M = MOD[2];
+const int M = MOD[3];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
-
 void solve() {
+    ll n;
     cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
+    vll A(n+1), DP(n+1), PREF(n+1);
+    FORN(i, 1, n) cin>>A[i];
+
+    stack<ll> chain, sum;
+
+    FORN(i, 1, n) {
+        while (chain.size() && A[chain.top()] > A[i]) {
+            chain.pop();
+            sum.pop();
         }
-        H[i] = A[i];
+        ll p = chain.size()?chain.top():0;
+        DP[i] = (PREF[i-1] - PREF[p]+M)%M;
+        if (chain.size()) {
+            DP[i] = (DP[i] + sum.top()) %M;
+            sum.push((DP[i] + sum.top()) %M);
+        } else {
+            DP[i] = (DP[i]+1) %M;
+            sum.push(DP[i]);
+        }
+        deb(DP);
+        chain.push(i);
+        PREF[i] = (PREF[i-1]+DP[i]) %M;
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    deb(DP);
+
+    ll m=INF, ans=0;
+    ROF(i, n, 0) {
+        if (m<A[i]) continue;
+        ans = (ans+DP[i]) %M;
+        m=A[i];
     }
-    cout<<u<<"\n";
+
+    cout<<ans<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    cin >> t;
     while (t--) solve();
 }
-
