@@ -1,14 +1,7 @@
-<<<<<<< Updated upstream
-#include <bits/stdc++.h>
-using namespace std;
-#ifdef DEBUG
-    #include </home/poeticpotato/work/cpp/debug.h>
-=======
 #include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 #ifdef DEBUG
     #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
->>>>>>> Stashed changes
 #else
   #define deb(x...)
 #endif
@@ -40,53 +33,29 @@ const int inf = (int)1e9;
 const ll INF = 1e18;
 
 void solve() {
-    ll n;
-    cin>>n;
-    vll A(n+1);
-    REP(i, n) {
-        ll c;
-        cin>>c;
-<<<<<<< Updated upstream
-        A[c]++;
-    }
-    ll m = 0; while (A[m]) m++;
-    deb(A, m);
-    if (!m) return (void) (cout<<"0\n");
-    vv<ll> DP(m, vll(n));
-    REP(i, n) DP[0][i] = m * min(i, A[0]);
-
-    FOR(i, 1, m) {
-        REP(j, A[i]) DP[i][j] = DP[i-1][j];
-        FOR(j, A[i], n) {
-            DP[i][j] = min(DP[i-1][j], m*A[i] + DP[i-1][j-A[i]]);
-        }
-    }
-    deb(DP);
-    cout<<DP[m-1][n-1]<<"\n";
-=======
-        if (c<=n) A[c]++;
+    ll n, p, l, t;
+    cin>>n>>p>>l>>t;
+    ll tot = (n+6)/7;
+    ll task = tot*t;
+    ll dy = (tot+1)/2;
+    deb(tot, task, dy, dy*l);
+    if (task + dy*l < p) {
+        cout<<n - (dy + (p-dy*l-task + l - 1)/l) <<"\n";
+        return;
     }
 
-    ll m = 0; while (A[m]) m++;
-
-    vll DP(m+1, inf);
-    DP[0] = 0;
-
-    FORN(i, 1, m) {
-        ROF(j, i-1, -1) {
-            DP[i] = min(DP[i], DP[j]+j+(A[j]-1)*i);
-        }
+    ll lef=0, rig=dy;
+    while (lef<rig) {
+        ll m = (lef+rig)/2;
+        ll total = l*m + t*m*2;
+        if (total > p) rig=m;
+        else lef = m+1;
     }
-    cout<<DP[m]<<"\n";
->>>>>>> Stashed changes
+    cout<<n-lef<<"\n";
 }
 
 int main() {
     int t=1;
-<<<<<<< Updated upstream
-    cin >> t;
-=======
     cin >> t; // Comment this out if there are no tests
->>>>>>> Stashed changes
     while (t--) solve();
 }

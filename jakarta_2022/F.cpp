@@ -1,14 +1,7 @@
-<<<<<<< Updated upstream
-#include <bits/stdc++.h>
-using namespace std;
-#ifdef DEBUG
-    #include </home/poeticpotato/work/cpp/debug.h>
-=======
 #include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 #ifdef DEBUG
     #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
->>>>>>> Stashed changes
 #else
   #define deb(x...)
 #endif
@@ -19,7 +12,7 @@ using namespace std;
 #define REP(i, n) FOR(i, 0, n)
 #define all(x) (x).begin(), (x).end()
 #define eb emplace_back
-typedef long long ll;
+typedef unsigned long long ll;
 typedef long double ld;
 typedef vector<ll> vll;
 template <typename T>
@@ -42,51 +35,27 @@ const ll INF = 1e18;
 void solve() {
     ll n;
     cin>>n;
-    vll A(n+1);
-    REP(i, n) {
-        ll c;
-        cin>>c;
-<<<<<<< Updated upstream
-        A[c]++;
+    vll A(n);
+    REP(i , n) cin>>A[i];
+    ll g = A[0];
+    REP(i, n) g = __gcd(g, A[i]);
+    g<<=32;
+    REP(i, n) A[i] = __gcd(g, A[i]);
+    deb(A);
+    MinHeap<ll> q;
+    REP(i, n) q.push(A[i]);
+    while (q.size() > 1) {
+        ll a = q.top(); q.pop();
+        ll b = q.top(); q.pop();
+        q.push(__gcd(a, b)*2);
     }
-    ll m = 0; while (A[m]) m++;
-    deb(A, m);
-    if (!m) return (void) (cout<<"0\n");
-    vv<ll> DP(m, vll(n));
-    REP(i, n) DP[0][i] = m * min(i, A[0]);
+    ll ans = q.top();
+    cout<<ans<<"\n";
 
-    FOR(i, 1, m) {
-        REP(j, A[i]) DP[i][j] = DP[i-1][j];
-        FOR(j, A[i], n) {
-            DP[i][j] = min(DP[i-1][j], m*A[i] + DP[i-1][j-A[i]]);
-        }
-    }
-    deb(DP);
-    cout<<DP[m-1][n-1]<<"\n";
-=======
-        if (c<=n) A[c]++;
-    }
-
-    ll m = 0; while (A[m]) m++;
-
-    vll DP(m+1, inf);
-    DP[0] = 0;
-
-    FORN(i, 1, m) {
-        ROF(j, i-1, -1) {
-            DP[i] = min(DP[i], DP[j]+j+(A[j]-1)*i);
-        }
-    }
-    cout<<DP[m]<<"\n";
->>>>>>> Stashed changes
 }
 
 int main() {
     int t=1;
-<<<<<<< Updated upstream
-    cin >> t;
-=======
-    cin >> t; // Comment this out if there are no tests
->>>>>>> Stashed changes
+    // cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }

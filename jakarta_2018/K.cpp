@@ -1,14 +1,7 @@
-<<<<<<< Updated upstream
-#include <bits/stdc++.h>
-using namespace std;
-#ifdef DEBUG
-    #include </home/poeticpotato/work/cpp/debug.h>
-=======
 #include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 #ifdef DEBUG
     #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
->>>>>>> Stashed changes
 #else
   #define deb(x...)
 #endif
@@ -40,53 +33,57 @@ const int inf = (int)1e9;
 const ll INF = 1e18;
 
 void solve() {
-    ll n;
-    cin>>n;
-    vll A(n+1);
-    REP(i, n) {
-        ll c;
-        cin>>c;
-<<<<<<< Updated upstream
-        A[c]++;
-    }
-    ll m = 0; while (A[m]) m++;
-    deb(A, m);
-    if (!m) return (void) (cout<<"0\n");
-    vv<ll> DP(m, vll(n));
-    REP(i, n) DP[0][i] = m * min(i, A[0]);
+    ll n, m;
+    cin>>n>>m;
 
-    FOR(i, 1, m) {
-        REP(j, A[i]) DP[i][j] = DP[i-1][j];
-        FOR(j, A[i], n) {
-            DP[i][j] = min(DP[i-1][j], m*A[i] + DP[i-1][j-A[i]]);
+    vv<ll> adj(n+1);
+    REP(i, m) {
+        ll a, b;
+        cin>>a>>b;
+        adj[a].eb(b);
+        adj[b].eb(a);
+    }
+    vll vis(n+1);
+    vector<array<ll, 3>> ans;
+
+    function<ll(ll, ll)> dfs = [&] (ll v, ll p) {
+        vis[v] = 1;
+        ll prev = 0;
+        for (auto c: adj[v]) {
+            if (vis[c] == 1) continue;
+            if (vis[c] == 2) {
+                if (prev) {
+                    ans.push_back(array<ll, 3>{prev, v, c});
+                    prev = 0;
+                } else prev = c;
+                continue;
+            }
+            if (dfs(c, v)) {
+                if (prev) {
+                    ans.push_back(array<ll, 3>{prev, v, c});
+                    prev = 0;
+                } else prev = c;
+            }
         }
-    }
-    deb(DP);
-    cout<<DP[m-1][n-1]<<"\n";
-=======
-        if (c<=n) A[c]++;
-    }
-
-    ll m = 0; while (A[m]) m++;
-
-    vll DP(m+1, inf);
-    DP[0] = 0;
-
-    FORN(i, 1, m) {
-        ROF(j, i-1, -1) {
-            DP[i] = min(DP[i], DP[j]+j+(A[j]-1)*i);
+        vis[v] = 2;
+        if (prev && p) {
+            ans.push_back(array<ll, 3>{prev, v, p});
+            return 0;
         }
+        return 1;
+    };
+
+    FORN(i, 1, n) {
+        if (!vis[i]) dfs(i, 0);
     }
-    cout<<DP[m]<<"\n";
->>>>>>> Stashed changes
+    cout<<ans.size()<<"\n";
+    REP(i, ans.size()) {
+        cout<<ans[i][0]<<" "<<ans[i][1]<<" "<<ans[i][2]<<"\n";
+    }
 }
 
 int main() {
     int t=1;
-<<<<<<< Updated upstream
-    cin >> t;
-=======
-    cin >> t; // Comment this out if there are no tests
->>>>>>> Stashed changes
+    // cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
