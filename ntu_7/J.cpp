@@ -32,43 +32,54 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
-
 void solve() {
+    ll n;
     cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
+    vector<pair<ll, ll>> A(n);
+    REP(i, n) cin>>A[i].first>>A[i].second;
+
+    set<ll> U;
+    REP(i, n) FOR(j, i+1, n) {
+        if (A[i].second == A[j].second) continue;
+        ll d = abs(A[j].first - A[i].first);
+
+        for (int k = 1;k*k<=d;k++) if (!(d%k)) {
+            U.insert(k);
+            U.insert(d/k);
+        }
+    }
+
+    FORN(i, 1, n) {
+        if (U.count(i)) continue;
+        vll T(i);
+        REP(j, n){
+            ll p = ((A[j].first%i) + i)%i;
+            T[p] = A[j].second;
+        }
+        bool flag = false;
+        REP(j, i) if (!T[j]) {
+            flag = true;
+            break;
+        }
+        if (flag) continue;
+
+        FOR(j, 1, i) {
+            if (i%j) continue;
+            bool flag = false;
+            REP(k, i) flag |= T[k] != T[k%j];
+            if (!flag) {
+                U.insert(i);
+                break;
             }
         }
-        H[i] = A[i];
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    ll sum = 0, c=0;
+    for (auto i: U) sum+=i, c++;
+    cout<<c<<" "<<sum<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t;
     while (t--) solve();
 }
-

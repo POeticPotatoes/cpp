@@ -32,43 +32,40 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+const ll N = 2e6;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, m, k, A[N], l=0, r=0, res=0, ans=0, c=0;
+
+void check(ll v) {
+    if (v<0 || v>m) return;
+    for (;l<n && A[l]<v;l++);
+    for (;r<n && A[r]<=v;r++);
+
+    if (r-l >= k) return;
+    ll lpos = r-k<0? 0: v - (v - A[r-k] - 1)/2;
+    ll rpos = l+k-1>=n? m: v + (A[l+k-1] - v - 1)/2; 
+    deb(v, l, r, lpos, rpos, rpos-lpos+1);
+
+    if (res < rpos - lpos +1) ans=v, res  = rpos-lpos+1;
+}
 
 void solve() {
-    cin>>n;
-    m = 0;
+    cin>>n>>m>>k;
+    REP(i, n) cin>>A[i];
+
+    sort(A, A+n);
+    check(0);
+
     REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+        FORN(j, A[i]-5, A[i]+5)
+            if (j>c) check(j);
+        c = A[i]+5;
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    cout<<res<<" "<<ans<<"\n";
 }
 
 int main() {
     int t=1;
     IO;
-    cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

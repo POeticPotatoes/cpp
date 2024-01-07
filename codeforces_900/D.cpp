@@ -32,43 +32,56 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
-
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
+    ll n, k, c, q;
+    string s;
+    cin>>n>>k;
+    cin>>s;
+
+    vll L(k+1);
+    REP(i, k) {
+        cin>>L[i];
+        L[i]--;
+    }
+    L[k]=n;
+    REP(i, k) cin>>c;
+    cin>>q;
+    vll A(q);
+    REP(i, q) cin>>A[i];
+
+    vector<string> seg;
+    REP(i, k) seg.eb(s.substr(L[i], L[i+1]-L[i]));
+    sort(all(A));
+
+    ll p=0, cur=0;
+    REP(i, k) {
+        ll m = seg[i].size();
+        cur += m;
+        ll mid = (m+1)/2;
+        vll swap(mid);
+        while (p<q && A[p]<=cur) {
+            ll t = A[p++];
+            ll pos = min(cur-t, m-1-cur+t);
+            swap[pos]^=1;
         }
-        H[i] = A[i];
+        bool flipped=false;
+        REP(j, mid) {
+            flipped^=swap[j];
+            if (flipped) cout<<seg[i][m-j-1];
+            else cout<<seg[i][j];
+        }
+        if (m&1) flipped^=swap[m>>1];
+        ROF(j, m/2-1, -1) {
+            if (flipped) cout<<seg[i][j];
+            else cout<<seg[i][m-j-1];
+            flipped^=swap[j];
+        }
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    cout<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    cin >> t;
     while (t--) solve();
 }
-

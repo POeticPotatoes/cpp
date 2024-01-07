@@ -32,43 +32,49 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
-
 void solve() {
-    cin>>n;
-    m = 0;
+    ll n,m ;
+    cin>>n>>m;
+    vector<string> A(n);
+    vv<char> ans(n, vector<char>(m, '.'));
+    REP(i, n) cin>>A[i];
+
+    vv<ll> p(n);
+    REP(i, n) REP(j, m) if (A[i][j]=='U') p[i].eb(j);
     REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
+        if (p[i].size()&1) return (void) (cout<<"-1\n");
+        ll k = p[i].size();
+        REP(j, k>>1) {
+            ans[i][p[i][j]] = 'W';
+            ans[i+1][p[i][j]] = 'B';
         }
-        H[i] = A[i];
+        FOR(j, k>>1, k) {
+            ans[i][p[i][j]] = 'B';
+            ans[i+1][p[i][j]] = 'W';
+        }
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    p = vv<ll>(m);
+    REP(j, m) REP(i, n) if (A[i][j]=='L') p[j].eb(i);
+    REP(j, m) {
+        if (p[j].size()&1) return (void) (cout<<"-1\n");
+        ll k = p[j].size();
+        REP(i, k>>1) {
+            ans[p[j][i]][j] = 'W';
+            ans[p[j][i]][j+1] = 'B';
+        }
+        FOR(i, k>>1, k) {
+            ans[p[j][i]][j] = 'B';
+            ans[p[j][i]][j+1] = 'W';
+        }
     }
-    cout<<u<<"\n";
+    REP(i, n) {
+        REP(j, m) cout<<ans[i][j];
+        cout<<"\n";
+    }
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    cin >> t;
     while (t--) solve();
 }
-

@@ -32,43 +32,54 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
-
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
+    ll n, m;
+    cin>>n>>m;
+    vector<string> A(n);
+    REP(i, n) cin>>A[i];
+
+    ll p = 0;
+    while (p<m) {
+        bool flag = false;
+        REP(i, n) if (A[i][p] == 'v') {
+            flag = true;
+            break;
         }
-        H[i] = A[i];
+        p++;
+        if (flag) break;
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    while (p<m) {
+        bool flag = false;
+        REP(i, n) if (A[i][p] == 'i') {
+            flag = true;
+            break;
+        }
+        p++;
+        if (flag) break;
     }
-    cout<<u<<"\n";
+    while (p<m) {
+        bool flag = false;
+        REP(i, n) if (A[i][p] == 'k') {
+            flag = true;
+            break;
+        }
+        p++;
+        if (flag) break;
+    }
+    while (p<m) {
+        bool flag = false;
+        REP(i, n) if (A[i][p] == 'a') {
+            flag = true;
+            break;
+        }
+        if (flag) break;
+        p++;
+    }
+    cout<<(p<m?"YES\n":"NO\n");
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    cin >> t;
     while (t--) solve();
 }
-

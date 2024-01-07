@@ -34,41 +34,36 @@ const ll INF = 1e18;
 
 const ll N = 3e5;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n;
+pair<ll, ll> A[N];
+vv<ll> adj;
+
+ll child(const pair<ll, ll> &p, ll v) { return v==p.first?p.second:p.first; }
+
+ll dfs(ll v, ll p, ll d, ll c) {
+    ll ans = c;
+    for (auto id: adj[v]) {
+        ll ch = child(A[id], v);
+        if (ch!=p) ans = max(ans, dfs(ch, v, id, c+(id<d)));
+    }
+    return ans;
+}
 
 void solve() {
     cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+    adj = vv<ll>(n+1);
+    REP(i, n-1) {
+        cin>>A[i].first>>A[i].second;
+        adj[A[i].first].eb(i);
+        adj[A[i].second].eb(i);
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+
+    ll ans = dfs(1, -1, 0, 1);
+    printf("%lld\n", ans);
 }
 
 int main() {
     int t=1;
-    IO;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

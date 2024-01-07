@@ -32,43 +32,31 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, k;
+string s;
 
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
+    cin>>n>>k;
+    cin>>s;
+    if (k&1) {
+        multiset<char> O[2];
+        REP(i, n) O[i&1].insert(s[i]);
+        auto a = O[0].begin(), b = O[1].begin();
+        while (a!=O[0].end()) {
+            cout<<*a++;
+            if (b!=O[1].end()) cout<<*b++;
         }
-        H[i] = A[i];
+        cout<<"\n";
+        return;
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    vll O(26);
+    REP(i, n) O[s[i]-'a']++;
+    REP(i, 26) REP(j, O[i]) cout<<(char)(i+'a');
+    cout<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    cin >> t;
     while (t--) solve();
 }
-

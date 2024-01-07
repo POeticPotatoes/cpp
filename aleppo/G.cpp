@@ -32,43 +32,44 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll modpow(ll x, ll p) {
+    if (!p) return 1;
+    ll ret = modpow(x, p/2);
+    ret = ret*ret % M;
+    if (p&1) {
+        ret = ret * x % M;
+    }
+    return ret;
+}
 
 void solve() {
-    cin>>n;
-    m = 0;
+    int n; cin >> n;
+    map<int, int> mp;
     REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+        int t; cin >> t;
+        mp[t]++;
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    ll mex = 0;
+    ll c = 1;
+    ll cc = 0;
+    ll ans = 0;
+    for(auto [x, y] : mp) {
+        cc += y;
+        ans += (modpow(2, n-cc) * mex % M) * c % M;
+        ans %= M;
+        deb(ans);
+
+        if (mex == x) mex++;
+        c *= modpow(2, y) - 1;
+        c %= M;
     }
-    cout<<u<<"\n";
+    cout << (ans+mex*c)%M << '\n';
+
+    
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    cin >> t;
     while (t--) solve();
 }
-

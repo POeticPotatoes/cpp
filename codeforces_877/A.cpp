@@ -32,43 +32,20 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+const ll N = 200;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, A[N];
 
 void solve() {
     cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
-    }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    REP(i, n) cin>>A[i];
+    sort(A, A+n);
+    if (A[0]<0) cout<<A[0]<<"\n";
+    else cout<<A[n-1]<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

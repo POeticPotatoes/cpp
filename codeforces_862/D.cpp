@@ -32,43 +32,41 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+const ll N =- 2e5;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, a, b, d;
+vv<ll> adj;
+
+ll dfs(ll v, ll p) {
+    vll sz;
+    for (auto c: adj[v]) if (c!=p) sz.eb(dfs(c, v));
+    sort(all(sz), greater<ll>());
+    sz.eb(0);
+    sz.eb(0);
+
+    d = max(d, sz[0]+sz[1]+1);
+    return sz[0]+1;
+}
 
 void solve() {
     cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+    adj = vv<ll>(n+1);
+
+    REP(i, n-1) {
+        cin>>a>>b;
+        adj[a].eb(b);
+        adj[b].eb(a);
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    d = 0;
+    d = max(dfs(1, -1), d);
+    REP(i, (n-1)>>1) cout<<"1 ";
+    if (!(n&1)) cout<<"2 ";
+    FORN(i, 1, (n+1)>>1) cout<<min(n, (1+(i<<1) + !(n&1)))<<" ";
+    cout<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t;
     while (t--) solve();
 }
-

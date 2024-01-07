@@ -32,43 +32,62 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+ll y, l;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll convert(ll n, ll b) {
+    ll k=0, p=1;
+    for (;n;k+= (n%b)*p, n/=b, p*=10)
+        if ((n%b)>9) return -1;
+    return k;
+}
+
+ll unconvert(ll n, ll b) {
+    ll v = 0, p=1;
+    while (n) {
+        v += p*(n%10);
+        n /= 10;
+        if (1e18/b < p) return -1;
+        p*=b;
+    }
+    return v;
+}
 
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
+    cin>>y>>l;
+    ll ans = 0;
+    // check l
+    FORN(i, l, 1e5) {
+        ll lef=10, rig=1e18;
+        bool flag = 0;
+        while (lef<rig) {
+            ll m = (lef+rig)>>1,
+               res = unconvert(i, m);
+            if (res == -1 || res>y) rig=m;
+            else lef = m+1;
+            if (res == y) {
+                flag = 1;
+                ans = m;
+                break;
             }
         }
-        H[i] = A[i];
+        if (flag) break;
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    deb(ans);
+
+    // check b
+    ROF(i, 1e5, 9) {
+        ll res = convert(y, i);
+        if (res<l) continue;
+        deb(res, i);
+        ans = max(ans, i);
+        break;
     }
-    cout<<u<<"\n";
+    cout<<ans<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    deb(convert(23125, 10));
+    // cin >> t;
     while (t--) solve();
 }
-

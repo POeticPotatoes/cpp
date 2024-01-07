@@ -32,39 +32,61 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 2001;
-
-ll n, m, k;
-pair<ll, ll> A[N];
-
 void solve() {
+    ll n, m, k;
     cin>>n>>m>>k;
-    REP(i, m) cin>>A[i].first>>A[i].second;
-    vll T(n+1);
+
+    vv<ll> adj(n+1);
+    vll A(n+1), O(n+1);
+    FORN(i, 1, n) cin>>A[i];
+    vll vis = A;
+    
     REP(i, m) {
-        auto &[a, b] = A[i];
-        FORN(j, a, b) T[j] = max(T[j], b);
+        ll a, b;
+        cin>>a>>b;
+        adj[a].eb(b);
     }
-    sort(A, A+m);
 
-    vv<ll> DP(n+1, vll(k+1, inf));
-    DP[0][0] = 0;
+    iota(next(O.begin()), O.end(), 1);
+    sort(next(O.begin()), O.end(), [&] (ll a, ll b) {
+        return A[a] < A[b];
+    });
 
+    ll ans = 0, h = 0;
     FORN(i, 1, n) {
-        FORN(j, 0, k) DP[i][j] = min(DP[i][j], DP[i-1][j]+1);
-        if (T[i]>=i) FORN(j, 1, k) DP[T[i]][j] = min(DP[T[i]][j], DP[i-1][j-1]);
+        h = max(h, vis[i]);
+        for (auto c: adj[i]) {
+            deb(i, c, vis[c], vis[i], ((A[c] - A[i] + k) %k));
+            vis[c] = max(vis[c], vis[i] + ((A[c] - A[i] + k) %k));
+        }
     }
-    deb(DP);
-    ll ans = INF;
-    FORN(j, 0, k) ans = min(ans, DP[n][j]);
-    cout<<n-ans<<"\n";
+    ans = h - A[O[1]];
+    deb(ans, vis, O);
+
+    FOR(i, 1, n) {
+        queue<ll> Q;
+        vis[O[i]] = max(vis[O[i]], A[O[i]] + k);
+        Q.push(O[i]);
+        while (Q.size()) {
+            auto v = Q.front(); Q.pop();
+            deb(i, v, vis[v]);
+            h = max(h, vis[v]);
+            for (auto c: adj[v]) {
+                ll p = vis[v] + ((A[c] - A[v]+k)%k);
+                if (p > vis[c]) {
+                    Q.push(c);
+                    vis[c] = p;
+                }
+            }
+        }
+        ans = min(ans, h-A[O[i+1]]);
+        deb(ans);
+    }
+    cout<<ans<<"\n";
 }
 
 int main() {
     int t=1;
     cin >> t;
-    FORN(i, 1, t) {
-        printf("Case #%lld: ", i);
-        solve();
-    }
+    while (t--) solve();
 }

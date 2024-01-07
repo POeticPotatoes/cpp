@@ -32,43 +32,50 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
-
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
+    ll n, q;
+    cin>>n>>q;
+    vv<ll> adj(n+1);
+    REP(i, n-1) {
+        ll a, b;
+        cin>>a>>b;
+        adj[a].eb(b);
+        adj[b].eb(a);
+    }
+
+    vll C(n+1);
+    ll ans, k, low;
+    function<ll(ll,ll,ll)> dfs = [&](ll v, ll p, ll d) {
+        deb(v, p, d);
+        ll s = C[v];
+        for (auto c: adj[v]) if (c!=p)
+            s += dfs(c, v, d+1);
+        if (s>=k) {
+            if (d>low) {
+                low=d;
+                ans=0;
             }
+            ans+=d==low;
         }
-        H[i] = A[i];
+        return s;
+    };
+    deb("INIT!");
+
+    REP(i, q) {
+        ll m;
+        cin>>k>>m;
+        vll Q(m);
+        REP(j, m) cin>>Q[j];
+        REP(j, m) C[Q[j]]=1;
+        ans=0, low=0;
+        dfs(1, 0, 0);
+        REP(j, m) C[Q[j]]=0;
+        cout<<ans<<"\n";
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    cin >> t;
     while (t--) solve();
 }
-

@@ -32,43 +32,42 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
-
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
+    ll m;
+    cin>>m;
+    vll cnt(30);
+
+    auto query = [&] (ll c) {
+        vll cur = cnt;
+        ROF(i, 30, -1) {
+            if (!((c>>i)&1)) continue;
+            ll v = 1<<i;
+            deb(v);
+            ROF(j, i, -1) {
+                ll amt = min(cur[j], v/(1<<j));
+                v -= (1<<j)*amt;
+                cur[j] -= amt;
+                if (!v) break;
+                deb(amt, v, j, cur);
             }
+            if (v>0) return (void) (cout<<"NO"<<endl);
         }
-        H[i] = A[i];
+        cout<<"YES"<<endl;
+    };
+
+    REP(t, m) {
+        ll q, c; cin>>q>>c;
+        if (q==1) {
+            cnt[c]++;
+        } else {
+            query(c);
+        }
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
 }
 
 int main() {
     int t=1;
     IO;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t;
     while (t--) solve();
 }
-

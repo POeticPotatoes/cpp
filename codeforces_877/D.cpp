@@ -32,43 +32,27 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, q, p;
+string s;
 
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+    cin>>n>>q;
+    cin>>s;
+    set<ll> A;
+    REP(i, n) if (s[i] - 40 - (i&1)) A.emplace(i);
+    REP(i, q) {
+        cin>>p;
+        if (A.count(p-1)) A.erase(p-1);
+        else A.emplace(p-1);
+        // deb(A, *A.begin(), *A.rbegin(), *A.begin()&1, *A.rbegin()&1);
+
+        if (n&1) cout<<"NO\n";
+        else cout<<((A.empty() || ((*A.begin() & 1) && !(*A.rbegin() & 1)))?"YES\n":"NO\n");
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

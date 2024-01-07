@@ -32,43 +32,32 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+const ll N = 3e3;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n;
+pair<ll, ll> A[N];
 
 void solve() {
     cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+    REP(i, n) cin>>A[i].first>>A[i].second;
+    sort(A, A+n);
+
+    vector<pair<ll, ll>> B;
+    REP(i, n) FOR(j, i+1, n) if (i!=j && (A[i].second>=A[j].first)) {
+        B.eb(A[i].first, max(A[i].second, A[j].second));
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    map<ll, ll> DP;
+    DP[2e9] = 0;
+
+    for (auto p = B.rbegin(); p!=B.rend(); p++) {
+        auto &[l, r] = *p;
+        DP[l] = max({DP[l], DP.upper_bound(l)->second, DP.upper_bound(r)->second+2});
     }
-    cout<<u<<"\n";
+    cout<<n-DP.begin()->second<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

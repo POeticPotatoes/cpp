@@ -34,41 +34,36 @@ const ll INF = 1e18;
 
 const ll N = 3e5;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, A[N], B[N];
 
 void solve() {
     cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
+    REP(i, n) cin>>A[i];
+    REP(i, n) cin>>B[i];
+
+    map<ll, ll> C;
+    ll c=1, ans=0;
+    FORN(i, 1, n) {
+        if (i==n || A[i] != A[i-1]) {
+            C[A[i-1]] = max(C[A[i-1]], c);
+            ans = max(ans, c);
+            c=0;
         }
-        H[i] = A[i];
+        c++;
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    c=1;
+    FORN(i, 1, n) {
+        if (i==n || B[i] != B[i-1]) {
+            ans = max(ans, C[B[i-1]] + c);
+            c=0;
+        }
+        c++;
     }
-    cout<<u<<"\n";
+    printf("%lld\n", ans);
 }
 
 int main() {
     int t=1;
-    IO;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

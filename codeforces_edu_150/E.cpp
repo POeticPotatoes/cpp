@@ -34,41 +34,41 @@ const ll INF = 1e18;
 
 const ll N = 3e5;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+ll n, c, k;
+pair<ll, ll> A[N];
 
 void solve() {
     cin>>n;
-    m = 0;
     REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+        cin>>c;
+        A[i] = {c, i};
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    cin>>k;
+    sort(A, A+n, greater<pair<ll, ll>>());
+    map<pair<ll, ll>, ll> V;
+    map<ll, ll, greater<ll>> S;
+    V.emplace(make_pair(0, n-1), n);
+    REP(i, n) {
+        auto &[h, v] = A[i];
+        auto p = V.upper_bound({v, INF});
+        auto [a, b] = *--p;
+        S[a.second - a.first + 1] += b-h;
+        V.erase(p);
+        if (a.first<v) V.emplace(make_pair(a.first, v-1), h);
+        if (v<a.second) V.emplace(make_pair(v+1, a.second), h);
     }
-    cout<<u<<"\n";
+    ll ans = 0;
+    for (auto &[v, o]: S) {
+        ll r = min(o, (k+v-1)/v), s = min(k, r*v);
+        ans += s-r;
+        k -= s;
+        if (!k) break;
+    }
+    cout<<ans<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
     cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
-

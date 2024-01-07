@@ -32,43 +32,54 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
+ll n, ans, t;
 
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
+struct node {
+    ll cnt=0;
+    map<char, node*> mp;
+};
+
+void build (string &s, int p, node* nd) {
+    nd->cnt++;
+    if (p==s.size()) return;
+    if (!nd->mp.count(s[p])) nd->mp[s[p]] = new node();
+    build(s, p+1, nd->mp[s[p]]);
+}
+
+void count (string &s, int p, node* nd) {
+    ans -= (nd->cnt)*2;
+    if (p==s.size()) return;
+    if (nd->mp[s[p]]) {
+        count(s, p+1, nd->mp[s[p]]);
+    }
+}
 
 void solve() {
     cin>>n;
-    m = 0;
+    t = 0;
+    vector<string> A(n);
+    REP(i, n) cin>>A[i];
+
+    node root;
+
     REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
-        }
-        H[i] = A[i];
+        build(A[i], 0, &root);
+        t += A[i].size();
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
+    root.cnt=0;
+
+    ans=t*2*n;
+
+    REP(i, n) {
+        reverse(all(A[i]));
+        count(A[i], 0, &root);
     }
-    cout<<u<<"\n";
+
+    cout<<ans<<"\n";
 }
 
 int main() {
     int t=1;
-    IO;
-    cin >> t; // Comment this out if there are no tests
+    // cin >> t;
     while (t--) solve();
 }
-

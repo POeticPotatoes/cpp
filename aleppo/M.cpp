@@ -32,43 +32,27 @@ const int M = MOD[2];
 const int inf = (int)1e9;
 const ll INF = 1e18;
 
-const ll N = 3e5;
-
-ll n, H[N], A[N], m;
-pair<ll, pair<ll, ll>> q[N];
-
 void solve() {
-    cin>>n;
-    m = 0;
-    REP(i, n) {
-        ll k, c, prev=0;
-        A[i] = 0;
-        cin>>k;
-        REP(j, k) {
-            cin>>c;
-            if (prev < c) {
-                q[m++] = {c, make_pair(i, A[i]++)};
-                prev = c;
-            }
+    ll n, k;
+    cin>>n>>k;
+    vll A(n);
+    REP(i, n) cin>>A[i];
+    ll s = (1<<k)-1, c=0;
+    ROF(i, k, -1) {
+        if (!(s>>i&1)) continue;
+        REP(j, n) if (!(A[j]>>i&1)) {
+            c++;
+            A[j] |= 1<<i;
+            s&=A[j];
         }
-        H[i] = A[i];
     }
-    sort(q, q+m);
-    ll h = 0, u = 0;
-    REP(k, m) {
-        auto &[v, p] = q[k];
-        auto &[i, j] = p;
-        if (k && v != q[k-1].first) h = u;
-        H[i] = max(H[i], A[i]-j+h);
-        if (j == A[i]-1) u = max(u, H[i]);
-    }
-    cout<<u<<"\n";
+    if (s==((1<<k)-1) && c<n) s^=1;
+    cout<<s<<"\n";
 }
 
 int main() {
-    int t=1;
     IO;
-    cin >> t; // Comment this out if there are no tests
+    int t=1;
+    cin >> t;
     while (t--) solve();
 }
-
