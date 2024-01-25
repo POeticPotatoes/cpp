@@ -1,14 +1,7 @@
-<<<<<<< Updated upstream
-#include <bits/stdc++.h>
-using namespace std;
-#ifdef DEBUG
-    #include </home/poeticpotato/work/cpp/debug.h>
-=======
 #include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 #ifdef DEBUG
     #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
->>>>>>> Stashed changes
 #else
   #define deb(x...)
 #endif
@@ -40,53 +33,27 @@ const int inf = (int)1e9;
 const ll INF = 1e18;
 
 void solve() {
-    ll n;
-    cin>>n;
-    vll A(n+1);
-    REP(i, n) {
-        ll c;
-        cin>>c;
-<<<<<<< Updated upstream
-        A[c]++;
+    string s;
+    cin>>s;
+    ll C[2]{}, n=s.size();
+    REP(i, n) C[s[i]-'0']++;
+    if (C[0] > C[1]) {
+        REP(i, n) cout<<'1';
+        cout<<"\n";
+        return;
+    } 
+    if (C[1] > C[0]) {
+        REP(i, n) cout<<'0';
+        cout<<"\n";
+        return;
     }
-    ll m = 0; while (A[m]) m++;
-    deb(A, m);
-    if (!m) return (void) (cout<<"0\n");
-    vv<ll> DP(m, vll(n));
-    REP(i, n) DP[0][i] = m * min(i, A[0]);
-
-    FOR(i, 1, m) {
-        REP(j, A[i]) DP[i][j] = DP[i-1][j];
-        FOR(j, A[i], n) {
-            DP[i][j] = min(DP[i-1][j], m*A[i] + DP[i-1][j-A[i]]);
-        }
-    }
-    deb(DP);
-    cout<<DP[m-1][n-1]<<"\n";
-=======
-        if (c<=n) A[c]++;
-    }
-
-    ll m = 0; while (A[m]) m++;
-
-    vll DP(m+1, inf);
-    DP[0] = 0;
-
-    FORN(i, 1, m) {
-        ROF(j, i-1, -1) {
-            DP[i] = min(DP[i], DP[j]+j+(A[j]-1)*i);
-        }
-    }
-    cout<<DP[m]<<"\n";
->>>>>>> Stashed changes
+    cout<<(char) (s[0]^1);
+    REP(i, n-1) cout<<s[0];
+    cout<<"\n";
 }
 
 int main() {
     int t=1;
-<<<<<<< Updated upstream
-    cin >> t;
-=======
-    cin >> t; // Comment this out if there are no tests
->>>>>>> Stashed changes
+    //cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }

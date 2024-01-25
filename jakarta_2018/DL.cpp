@@ -1,14 +1,7 @@
-<<<<<<< Updated upstream
-#include <bits/stdc++.h>
-using namespace std;
-#ifdef DEBUG
-    #include </home/poeticpotato/work/cpp/debug.h>
-=======
 #include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 #ifdef DEBUG
     #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
->>>>>>> Stashed changes
 #else
   #define deb(x...)
 #endif
@@ -40,53 +33,45 @@ const int inf = (int)1e9;
 const ll INF = 1e18;
 
 void solve() {
-    ll n;
-    cin>>n;
-    vll A(n+1);
-    REP(i, n) {
-        ll c;
-        cin>>c;
-<<<<<<< Updated upstream
-        A[c]++;
-    }
-    ll m = 0; while (A[m]) m++;
-    deb(A, m);
-    if (!m) return (void) (cout<<"0\n");
-    vv<ll> DP(m, vll(n));
-    REP(i, n) DP[0][i] = m * min(i, A[0]);
+    ll r, c;
+    cin>>r>>c;
+    vector<string> A(r);
+    REP(i, r) cin>>A[i];
 
-    FOR(i, 1, m) {
-        REP(j, A[i]) DP[i][j] = DP[i-1][j];
-        FOR(j, A[i], n) {
-            DP[i][j] = min(DP[i-1][j], m*A[i] + DP[i-1][j-A[i]]);
+    ll ans = 0;
+
+    if (r<=2 && c<=2) return (void) (cout<<"0\n");
+    if (r<=2) {
+        FOR(j, 1, c-1) {
+            bool flag = false;
+            REP(i, r) flag |= A[i][j]=='#';
+            ans += !flag;
         }
+        return (void) (cout<<ans<<"\n");
     }
-    deb(DP);
-    cout<<DP[m-1][n-1]<<"\n";
-=======
-        if (c<=n) A[c]++;
-    }
-
-    ll m = 0; while (A[m]) m++;
-
-    vll DP(m+1, inf);
-    DP[0] = 0;
-
-    FORN(i, 1, m) {
-        ROF(j, i-1, -1) {
-            DP[i] = min(DP[i], DP[j]+j+(A[j]-1)*i);
+    if (c<=2) {
+        FOR(i, 1, r-1) {
+            bool flag = false;
+            REP(j, c) flag |= A[i][j]=='#';
+            ans += !flag;
         }
+        return (void) (cout<<ans<<"\n");
     }
-    cout<<DP[m]<<"\n";
->>>>>>> Stashed changes
+
+    FOR(i, 1, r-1) FOR(j, 1, c-1) {
+        ans += A[i][j] != '#';
+    }
+    bool flag = false;
+    FOR(i, 1, r-1) flag |= A[i][0] == '#';
+    FOR(i, 1, r-1) flag |= A[i][c-1] == '#';
+    FOR(i, 1, c-1) flag |= A[0][i] == '#';
+    FOR(i, 1, c-1) flag |= A[r-1][i] == '#';
+    ans += !flag;
+    cout<<ans<<"\n";
 }
 
 int main() {
     int t=1;
-<<<<<<< Updated upstream
-    cin >> t;
-=======
-    cin >> t; // Comment this out if there are no tests
->>>>>>> Stashed changes
+    // cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }

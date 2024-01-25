@@ -73,15 +73,22 @@ int dfs(int v,  vertex *adj) {
         if (j==p) continue;
         adj[j].depth = adj[v].depth+1;
         adj[j].parent = v;
+<<<<<<< Updated upstream
         dfs(j, adj);
+=======
+        total[v] += dfs(j, adj);
+>>>>>>> Stashed changes
         if (total[j] > max) max=total[j], heavy[v]=j;
     }
     return total[v];
 }
 
 int *merge(vector v1, vector v2) {
+<<<<<<< Updated upstream
     printf("Merging:\n");
     printVec(v1); printVec(v2);
+=======
+>>>>>>> Stashed changes
     int i=0, j=0, n = v1.size + v2.size;
     int *res = malloc(sizeof(int)*(n)), *p = res;
     while (i<v1.size && j<v2.size)
@@ -92,29 +99,43 @@ int *merge(vector v1, vector v2) {
 }
 
 int buildTree(int *arr, vector st[], int p, int l, int r) {
+<<<<<<< Updated upstream
     printf("getting %d to %d\n", l, r);
     if (l==r) {
         st[p].get = malloc(sizeof(int));
         st[p].get[0] = arr[l];
         printf("(%d value %d at %d)\n", l, arr[l], p);
+=======
+    if (l==r) {
+        st[p].get = malloc(sizeof(int));
+        st[p].get[0] = arr[l];
+>>>>>>> Stashed changes
         return st[p].size = 1;;
     }
 
     int mid = (l+r)>>1, a, b;
     a = buildTree(arr, st, p<<1, l, mid);
     b = buildTree(arr, st, (p<<1)+1, mid+1, r);
+<<<<<<< Updated upstream
     printf("merging %d and %d\n", p<<1, p*2+1);
     st[p].get = merge(st[p<<1], st[(p<<1)+1]);
     st[p].size = a+b;
     printf("(%d, %d at %d): ", l, r, p);
     printVec(st[p]);
+=======
+    st[p].get = merge(st[p<<1], st[(p<<1)+1]);
+    st[p].size = a+b;
+>>>>>>> Stashed changes
     return st[p].size = a+b;
 }
 
 int lower_bound(int *arr, int l, int r, int v) {
+<<<<<<< Updated upstream
     printf("binsearch: ");
     for (int i=0;i<r;i++) printf("%d ", arr[i]);
     printf("\n");
+=======
+>>>>>>> Stashed changes
     while (l<r) {
         int mid = (l+r)>>1;
         if (arr[mid]<=v) l = mid+1;
@@ -125,8 +146,11 @@ int lower_bound(int *arr, int l, int r, int v) {
 
 int check(vector *st, int p, int l, int r, int a, int b, int k) {
     if (l>b || r<a) return 0;
+<<<<<<< Updated upstream
     printf("Checking %d to %d (%d, %d) %d\n", l, r, a, b, p);
     printVec(st[p]);
+=======
+>>>>>>> Stashed changes
     if (a<=l && b>=r)
         return lower_bound(st[p].get, 0, st[p].size, k);
     int mid = (l+r)>>1;
@@ -136,21 +160,30 @@ int check(vector *st, int p, int l, int r, int a, int b, int k) {
 
 int query(int a, int b, vertex *adj, int k) {
     int res = 0;
+<<<<<<< Updated upstream
     for (;head[a] != head[b]; b=adj[b].parent) {
+=======
+    for (;head[a] != head[b]; b=adj[head[b]].parent) {
+>>>>>>> Stashed changes
         if (adj[head[a]].depth > adj[head[b]].depth) {
             int t = a;
             a = b;
             b = t;
         }
+<<<<<<< Updated upstream
         printf("1. for %d, querying %d from %d to %d\n", b, B[b], 0, pos[b]);
         res += check(T[B[b]], 1, 0, T[B[b]][1].size-1, 0, pos[b], k);
         printf("got %d\n", res);
+=======
+        res += check(T[B[b]], 1, 0, T[B[b]][1].size-1, 0, pos[b], k);
+>>>>>>> Stashed changes
     }
     if (adj[a].depth > adj[b].depth) {
         int t = a;
         a = b;
         b = t;
     }
+<<<<<<< Updated upstream
     printf("2. querying %d from %d to %d\n", B[b], pos[a], pos[b]);
     res += check(T[B[b]], 1, 0, T[B[b]][1].size-1, pos[a], pos[b], k);
     printf("got %d\n", res);
@@ -173,14 +206,23 @@ int lca(int a, int b, int *BL, vertex *adj) {
     return BL[get(a, 0)];
 }
 
+=======
+    res += check(T[B[b]], 1, 0, T[B[b]][1].size-1, pos[a], pos[b], k);
+    return res;
+}
+
+>>>>>>> Stashed changes
 int decompose(int v, int h, vertex *adj, int *pop, int arr[], int c) {
     head[v] = h; arr[pos[v] = curpos++] = pop[v-1];
     B[v] = c;
     if (heavy[v] == -1) {
         T[c] = (vector*) malloc(sizeof(vector) * (curpos * 4 + 1));
+<<<<<<< Updated upstream
         printf("Building Tree: ");
         for (int i=0;i<curpos;i++) printf("%d ", arr[i]);
         printf("\n");
+=======
+>>>>>>> Stashed changes
         buildTree(arr, T[c], 1, 0, curpos-1);
         return c;
     }
@@ -214,6 +256,7 @@ int* city_population (int N, int* population, int** road, int Q, int** cities)
 
     dfs(1, adj);
 
+<<<<<<< Updated upstream
     // Build decomposition tree
     int c = decompose(1, 1, adj, population, malloc(sizeof(int) * total[1]), 0);
     printf("c>>>>%d\n", c);
@@ -241,4 +284,12 @@ int* city_population (int N, int* population, int** road, int Q, int** cities)
         ANS[i] = query(cities[i][0], cities[i][1], adj, cities[i][2]);
     }
     return ANS;
+=======
+    int c = decompose(1, 1, adj, population, malloc(sizeof(int) * total[1]), 0);
+
+    int *ANS = (int*) malloc(sizeof(int)*Q);
+    for (int i=0;i<Q;i++) ANS[i] = query(cities[i][0], cities[i][1], adj, cities[i][2]);
+    return ANS;
+
+>>>>>>> Stashed changes
 }

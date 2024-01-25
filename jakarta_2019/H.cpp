@@ -1,14 +1,7 @@
-<<<<<<< Updated upstream
-#include <bits/stdc++.h>
-using namespace std;
-#ifdef DEBUG
-    #include </home/poeticpotato/work/cpp/debug.h>
-=======
 #include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
 using namespace std;
 #ifdef DEBUG
     #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
->>>>>>> Stashed changes
 #else
   #define deb(x...)
 #endif
@@ -42,51 +35,44 @@ const ll INF = 1e18;
 void solve() {
     ll n;
     cin>>n;
-    vll A(n+1);
+    vector<pair<pair<ll, ll>, ll>> A;
+    float ans = 0;
     REP(i, n) {
-        ll c;
-        cin>>c;
-<<<<<<< Updated upstream
-        A[c]++;
+        ll a, b;
+        cin>>a>>b;
+        ans = max(ans, a*b/2.0f);
+        A.emplace_back(make_pair(a, b), i);
+        A.emplace_back(make_pair(b, a), i);
     }
-    ll m = 0; while (A[m]) m++;
-    deb(A, m);
-    if (!m) return (void) (cout<<"0\n");
-    vv<ll> DP(m, vll(n));
-    REP(i, n) DP[0][i] = m * min(i, A[0]);
 
-    FOR(i, 1, m) {
-        REP(j, A[i]) DP[i][j] = DP[i-1][j];
-        FOR(j, A[i], n) {
-            DP[i][j] = min(DP[i-1][j], m*A[i] + DP[i-1][j-A[i]]);
+    sort(all(A));
+    MaxHeap<pair<pair<ll, ll>, ll>> q;
+    REP(i, n<<1) q.emplace(A[i]);
+
+    REP(i, (n<<1)) {
+        bool flag = false;
+        while (q.size() && (q.top().second == A[i].second || q.top().first.second < A[i].first.first)) {
+            flag |= q.top().second==A[i].second;
+            q.pop();
         }
-    }
-    deb(DP);
-    cout<<DP[m-1][n-1]<<"\n";
-=======
-        if (c<=n) A[c]++;
-    }
-
-    ll m = 0; while (A[m]) m++;
-
-    vll DP(m+1, inf);
-    DP[0] = 0;
-
-    FORN(i, 1, m) {
-        ROF(j, i-1, -1) {
-            DP[i] = min(DP[i], DP[j]+j+(A[j]-1)*i);
+        if (q.size()) {
+            auto p = q.top();
+            deb(A[i], p, ans);
+            ll h = A[i].first.first, v = min(A[i].first.second, p.first.first);
+            ans = max(ans, (float) (h*v));
         }
+        if (flag) {
+            q.emplace(A[i]);
+            q.emplace(make_pair(A[i].first.second, A[i].first.first), A[i].second);
+        }
+
     }
-    cout<<DP[m]<<"\n";
->>>>>>> Stashed changes
+
+    printf("%.1f\n", ans);
 }
 
 int main() {
     int t=1;
-<<<<<<< Updated upstream
-    cin >> t;
-=======
-    cin >> t; // Comment this out if there are no tests
->>>>>>> Stashed changes
+    // cin >> t; // Comment this out if there are no tests
     while (t--) solve();
 }
