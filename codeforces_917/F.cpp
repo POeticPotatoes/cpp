@@ -33,7 +33,56 @@ const int inf = (int)1e9;
 const ll INF = 1e18;
 
 void solve() {
-    
+    ll n, d;
+    cin>>n>>d;
+    vll A(n);
+    REP(i, n) cin>>A[i];
+    sort(all(A), greater<ll>());
+
+    vector<bitset<2001>> DP(n+1), subsets(d+1);
+
+    // Standard knapsack
+    DP[0][0] = 1;
+    subsets[0][0] = 1;
+    ll sum=0;
+    REP(i, n) {
+        DP[i+1] = DP[i]<<A[i]|DP[i];
+        sum += A[i];
+    }
+
+    if (sum == d) return (void) (cout<<"YES\n");
+    // else some item(s) must be excluded from the subset
+
+    ROF(i, n-1, -1) {
+
+        // exclude current item from sum
+        sum -= A[i];
+
+        // only check if current sum is already smaller than d
+        if (sum <= d) {
+            // find some subset sum that is reachable with remaining elements
+            FORN(j, 0, sum) if (DP[i][j]) {
+                // get minimum value that must be included to subset sum
+                ll l = max(0LL, A[i]-j);
+
+                // get max value that can be included to subset sum (such that right side is still >= A[i])
+                ll r = d - A[i] - j;
+
+                if (l>r) continue;
+                deb(i, A[i],j,l, r);
+
+                // check if such a subset exists in elements that will be used to produce a length of d
+                if ((subsets[d-sum]>>l<<2000-r+l).any()) {
+                    cout<<"YES\n";
+                    return;
+                }
+            }
+        }
+
+        for (int j=d;j>=A[i];j--)
+            subsets[j] |= subsets[j-A[i]]<<A[i] | subsets[j-A[i]];
+    }
+    cout<<"NO\n";
 }
 
 int main() {

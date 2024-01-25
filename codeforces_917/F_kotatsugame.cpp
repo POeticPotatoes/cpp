@@ -9,8 +9,6 @@ int N,D;
 int L[2000];
 int main()
 {
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr);
 	int T;cin>>T;
 	for(;T--;)
 	{
@@ -50,6 +48,8 @@ int main()
                     // Right bound: Requires a subset of unused items BELONGING to the subset that completes the current sum that does not make the remaining sum smaller than L[i]
 					int ly=max(L[i]-x,0),ry=D-x-L[i];
 					if(ly>ry)continue;
+
+                    cout<<i<<" "<<L[i]<<" "<<x<<" "<<ly<<" "<<ry<<"\n";
                     // Perform the check
 					if((dp[D-sum]>>ly<<2000-ry+ly).any())
 					{
