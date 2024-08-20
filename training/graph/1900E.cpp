@@ -1,7 +1,7 @@
-#include </Users/poeticpotato/Desktop/Work/cpp/bits.h>
+#include <bits/stdc++.h>
 using namespace std;
 #ifdef DEBUG
-    #include </Users/poeticpotato/Desktop/Work/cpp/debug.h>
+    #include </home/poeticpotato/work/cpp/debug.h>
 #else
   #define deb(x...)
 #endif
@@ -35,94 +35,87 @@ const ll INF = 1e18;
 void solve() {
     ll n, m;
     cin>>n>>m;
-
-    vv<ll> adj(n+1);
     vll A(n+1);
+    vv<ll> adj(n+1);
     FORN(i, 1, n) cin>>A[i];
     REP(i, m) {
         ll a, b;
         cin>>a>>b;
-        if (a != b) adj[a].eb(b);
+        if (a!=b) adj[a].eb(b);
     }
-
     FORN(i, 1, n) {
         sort(all(adj[i]));
         auto p = unique(all(adj[i]));
         adj[i].resize(p-adj[i].begin());
     }
 
-    vll lo(n+1), ord(n+1), vis(n+1), comp(n+1);
-
-    vector<pair<ll, ll>> alt;
-    vv<ll> dir;
-    ll dep=0;
+    vll ord(n+1), lo(n+1), comp(n+1), vis(n+1);
+    ll cnt=0, scc=0;
+    stack<ll> add;
 
     function<void(ll)> tarjan = [&] (ll v) {
         vis[v] = 1;
-        lo[v] = ord[v] = ++dep;
+        lo[v] = ord[v] = ++cnt;
+        add.push(v);
 
         for (auto c: adj[v]) {
-            // deb(v, c, vis[c]);
             if (!vis[c]) {
                 tarjan(c);
                 lo[v] = min(lo[v], lo[c]);
-            } else if (vis[c]==1) lo[v] = min(lo[v], ord[c]);
+            } else if (vis[c]==1)
+                lo[v] = min(lo[v], ord[c]);
         }
-        vis[v]=2;
-    };
 
-    function<void(ll, ll)> build = [&] (ll v, ll p) {
-        if (vis[v]==3) return;
-        vis[v] = 3;
-        ll id = p;
-        if (lo[v] == ord[v]) { // SCC
-            id = alt.size();
-            alt.eb(0, 0);
-            dir.eb(vll());
-        }
-        comp[v] = id;
-        alt[id].first++, alt[id].second += A[v];
-
-        for (auto c: adj[v]) {
-            build(c, id);
-            if (comp[c] != id) dir[id].eb(comp[c]);
+        if (lo[v] == ord[v]) {
+            ll c = -1;
+            while (c != v) {
+                c = add.top(); add.pop();
+                comp[c] = scc;
+                vis[c] = 2;
+            }
+            scc++;
         }
     };
 
     FORN(i, 1, n) if (!vis[i]) tarjan(i);
-    // deb(lo, ord, vis);
-    FORN(i, 1, n) if (vis[i] != 3) build(i, 0);
-    deb(comp, alt);
-    // deb(dir);
 
-    vector<pair<ll, ll>> DP(alt.size());
-
-    pair<ll, ll> ans;
+    vector<pair<ll, ll>> SCC(scc);
+    vv<ll> sccadj(scc);
+    FORN(i, 1, n) {
+        SCC[comp[i]].first++;
+        SCC[comp[i]].second += A[i];
+        for (auto c: adj[i]) if (comp[c] != comp[i])
+            sccadj[comp[i]].eb(comp[c]);
+    }
 
     auto compare = [&] (pair<ll, ll> a, pair<ll, ll> b) {
-        if (a.first > b.first) return a;
-        if (a.first == b.first && a.second < b.second) return a;
-        return b;
+        if (a.first<b.first) return b;
+        if (a.first==b.first && b.second<a.second) return b;
+        return a;
     };
 
+    pair<ll, ll> ans;
+    vector<pair<ll, ll>> DP(scc);
     function<void(ll)> count = [&] (ll v) {
-        DP[v] = alt[v];
-        for (auto c: dir[v]) {
-            if (!DP[c].first) count(c);
-            DP[v] = compare(DP[v], make_pair(DP[c].first+alt[v].first, 
-                        DP[c].second+alt[v].second));
+        if (vis[v]==3) return;
+        vis[v] = 3;
+
+        DP[v] = SCC[v];
+        
+        for (auto c: sccadj[v]) {
+            count(c);
+            DP[v] = compare(DP[v], make_pair(DP[c].first+SCC[v].first, 
+                        DP[c].second+SCC[v].second));
         }
-        deb(v, alt[v], DP[v]);
         ans = compare(ans, DP[v]);
     };
 
-    REP(i, alt.size()) if (!DP[i].first) count(i);
+    REP(i, scc) if (vis[i]!=3) count(i);
     cout<<ans.first<<" "<<ans.second<<"\n";
 }
 
 int main() {
-    IO;
     int t=1;
-    cin >> t; // Comment this out if there are no tests
+    cin >> t;
     while (t--) solve();
 }
